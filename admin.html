@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EMPOWERED — Admin Dashboard</title>
+  <link rel="stylesheet" href="styles/admin-style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+
+  <!-- ══════════════════════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <i class="fa-solid fa-lightbulb"></i>
+      </div>
+      EMPOWERED
+    </div>
+
+    <div style="overflow-y:auto;flex:1;padding-bottom:8px;">
+
+      <div class="sidebar-section-label">
+        Main
+      </div>
+
+      <a class="nav-item active" href="#dashboard">
+        <i class="fa-solid fa-chart-pie"></i>
+        Dashboard
+      </a>
+
+      <a class="nav-item" href="#calendar">
+        <i class="fa-solid fa-calendar-days"></i>
+        Calendar
+      </a>
+
+      <a class="nav-item" href="#bookings">
+        <i class="fa-solid fa-clipboard-list"></i>
+        Bookings
+      </a>
+
+      <div class="sidebar-section-label">
+        Clients
+      </div>
+
+      <a class="nav-item" href="#clients">
+        <i class="fa-solid fa-users"></i>
+        Clients
+      </a>
+
+      <a class="nav-item" href="#messages">
+        <i class="fa-solid fa-message"></i>
+        Messages
+      </a>
+
+      <div class="sidebar-section-label">
+        Services
+      </div>
+
+      <a class="nav-item" href="#services">
+        <i class="fa-solid fa-briefcase"></i>
+        My Services
+      </a>
+
+    </div>
+
+    <div class="sidebar-footer">
+
+<a
+  class="nav-item"
+  id="admin-logout-btn"
+  style="color:rgba(239,68,68,.7);cursor:pointer;"
+>
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Logout
+      </a>
+
+    </div>
+
+  </aside>
+
+  <!-- ══════════════════════════════════════════════════════
+     MAIN WRAP
+══════════════════════════════════════════════════════ -->
+  <div class="main-wrap">
+
+    <!-- CONTENT -->
+    <div class="main-content">
+
+      <!-- ════════════════════════════════════════════════
+         PAGE: DASHBOARD
+    ════════════════════════════════════════════════ -->
+      <section class="app-section" id="dashboard">
+
+        <div class="page-header">
+          <div>
+            <div class="page-title">Good morning, Admin</div>
+            <!-- Date is injected dynamically by admin_dashboard.js -->
+            <div class="page-subtitle" id="dash-subtitle"></div>
+          </div>
+          <!-- New Booking button removed -->
+        </div>
+
+        <!-- KPI Row 1 -->
+        <div class="grid-5" style="margin-bottom:20px;">
+
+          <!-- Today's Bookings -->
+          <div class="stat-card">
+            <div class="stat-top">
+              <div class="stat-icon si-blue"><i class="fa-solid fa-calendar-check"></i></div>
+              <span class="stat-trend trend-up" id="dash-today-trend">—</span>
+            </div>
+            <div class="stat-value" id="dash-today-total">—</div>
+            <div class="stat-label">Today's Bookings</div>
+            <div class="stat-sub" id="dash-today-sub">loading…</div>
+          </div>
+
+          <!-- This Week's Bookings -->
+          <div class="stat-card">
+            <div class="stat-top">
+              <div class="stat-icon si-purple"><i class="fa-solid fa-calendar-week"></i></div>
+              <span class="stat-trend" id="dash-week-trend">—</span>
+            </div>
+            <div class="stat-value" id="dash-week-total">—</div>
+            <div class="stat-label">This Week's Bookings</div>
+            <div class="stat-sub" id="dash-week-sub">loading…</div>
+          </div>
+
+          <!-- Pending Requests -->
+          <div class="stat-card">
+            <div class="stat-top">
+              <div class="stat-icon si-amber"><i class="fa-solid fa-hourglass-half"></i></div>
+            </div>
+            <div class="stat-value" id="dash-pending-total">—</div>
+            <div class="stat-label">Pending Requests</div>
+            <div class="stat-sub">Awaiting your review</div>
+          </div>
+
+          <!-- Waiting Acceptance -->
+          <div class="stat-card">
+            <div class="stat-top">
+              <div class="stat-icon si-orange"><i class="fa-solid fa-clock-rotate-left"></i></div>
+            </div>
+            <div class="stat-value" id="dash-waiting-total">—</div>
+            <div class="stat-label">Waiting Acceptance</div>
+            <div class="stat-sub">Quote sent, awaiting reply</div>
+          </div>
+
+          <!-- Confirmed Bookings (this week) -->
+          <div class="stat-card">
+            <div class="stat-top">
+              <div class="stat-icon si-green"><i class="fa-solid fa-circle-check"></i></div>
+            </div>
+            <div class="stat-value" id="dash-confirmed-total">—</div>
+            <div class="stat-label">Confirmed Bookings</div>
+            <div class="stat-sub">Active this week</div>
+          </div>
+
+        </div>
+
+        <!-- KPI Row 2 -->
+        <div class="grid-5" style="margin-bottom:24px;">
+
+          <!-- Completed (all time) -->
+          <div class="stat-card">
+            <div class="stat-top">
+              <div class="stat-icon si-teal"><i class="fa-solid fa-flag-checkered"></i></div>
+            </div>
+            <div class="stat-value" id="dash-completed-total">—</div>
+            <div class="stat-label">Completed Bookings</div>
+            <div class="stat-sub">All time</div>
+          </div>
+
+          <!-- Cancelled (all time) -->
+          <div class="stat-card">
+            <div class="stat-top">
+              <div class="stat-icon si-red"><i class="fa-solid fa-ban"></i></div>
+            </div>
+            <div class="stat-value" id="dash-cancelled-total">—</div>
+            <div class="stat-label">Cancelled Bookings</div>
+            <div class="stat-sub">All time</div>
+          </div>
+
+          <!-- Total Clients -->
+          <div class="stat-card">
+            <div class="stat-top">
+              <div class="stat-icon si-blue"><i class="fa-solid fa-users"></i></div>
+            </div>
+            <div class="stat-value" id="dash-clients-total">—</div>
+            <div class="stat-label">Total Clients</div>
+            <div class="stat-sub" id="dash-clients-sub">loading…</div>
+          </div>
+
+          <!-- Total Revenue -->
+          <div class="stat-card">
+            <div class="stat-top">
+              <div class="stat-icon si-green"><i class="fa-solid fa-peso-sign"></i></div>
+            </div>
+            <div class="stat-value" id="dash-revenue-total">—</div>
+            <div class="stat-label">Total Revenue</div>
+            <div class="stat-sub">Lifetime earnings</div>
+          </div>
+
+          <!-- Monthly Revenue -->
+          <div class="stat-card">
+            <div class="stat-top">
+              <div class="stat-icon si-purple"><i class="fa-solid fa-chart-bar"></i></div>
+            </div>
+            <div class="stat-value" id="dash-monthly-revenue-total">—</div>
+            <div class="stat-label">Monthly Revenue</div>
+            <div class="stat-sub" id="dash-monthly-revenue-sub">loading…</div>
+          </div>
+
+        </div>
+
+        <!-- Charts + Upcoming -->
+        <div class="grid-2" style="margin-bottom:22px;">
+
+          <!-- Bookings Per Month Chart -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Bookings Per Month</div>
+                <div class="card-subtitle">Jan – Dec</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <!-- Bars are injected by admin_dashboard.js -->
+              <div class="bar-chart" id="dash-bookings-chart"></div>
+              <div
+                style="display:flex;justify-content:space-between;margin-top:12px;font-size:11px;color:var(--text-muted);">
+                <span id="dash-bookings-footer-left">—</span>
+                <span id="dash-bookings-footer-right" style="font-weight:600;">—</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Booking Status Distribution -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Booking Status Distribution</div>
+                <div class="card-subtitle">All-time overview</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="donut-wrap">
+                <svg class="donut-svg" width="120" height="120" viewBox="0 0 120 120">
+                  <!-- Track -->
+                  <circle cx="60" cy="60" r="48" fill="none" stroke="#e2e8f0" stroke-width="16" />
+                  <!-- Completed: blue — values injected by JS -->
+                  <circle id="donut-completed" cx="60" cy="60" r="48" fill="none" stroke="#3b82f6" stroke-width="16"
+                    stroke-dasharray="0 301.59" stroke-dashoffset="0" transform="rotate(-90 60 60)" />
+                  <!-- Confirmed: green -->
+                  <circle id="donut-confirmed" cx="60" cy="60" r="48" fill="none" stroke="#10b981" stroke-width="16"
+                    stroke-dasharray="0 301.59" stroke-dashoffset="0" transform="rotate(-90 60 60)" />
+                  <!-- Pending: amber -->
+                  <circle id="donut-pending" cx="60" cy="60" r="48" fill="none" stroke="#f59e0b" stroke-width="16"
+                    stroke-dasharray="0 301.59" stroke-dashoffset="0" transform="rotate(-90 60 60)" />
+                  <!-- Cancelled: red -->
+                  <circle id="donut-cancelled" cx="60" cy="60" r="48" fill="none" stroke="#ef4444" stroke-width="16"
+                    stroke-dasharray="0 301.59" stroke-dashoffset="0" transform="rotate(-90 60 60)" />
+                  <!-- Centre label -->
+                  <text id="donut-total-text" x="60" y="56" text-anchor="middle" font-size="14" font-weight="800"
+                    fill="#0f172a">—</text>
+                  <text x="60" y="70" text-anchor="middle" font-size="9" fill="#64748b">total</text>
+                </svg>
+
+                <div class="donut-legend">
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#3b82f6;"></div>
+                    <div class="legend-label">Completed</div>
+                    <div class="legend-val" id="donut-pct-completed">—</div>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#10b981;"></div>
+                    <div class="legend-label">Confirmed</div>
+                    <div class="legend-val" id="donut-pct-confirmed">—</div>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#f59e0b;"></div>
+                    <div class="legend-label">Pending</div>
+                    <div class="legend-val" id="donut-pct-pending">—</div>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#ef4444;"></div>
+                    <div class="legend-label">Cancelled</div>
+                    <div class="legend-val" id="donut-pct-cancelled">—</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /grid-2 charts row -->
+
+        <!-- Revenue + Upcoming Appointments -->
+        <div class="grid-2">
+
+          <!-- Revenue Chart + Most Requested -->
+          <div style="display:flex;flex-direction:column;gap:20px;">
+
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">Revenue Per Month</div>
+                  <div class="card-subtitle" id="dash-revenue-month-earned">loading…</div>
+                </div>
+                <span id="dash-mom-badge"
+                  style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;">—</span>
+              </div>
+              <div class="card-body">
+                <!-- Bars injected by admin_dashboard.js -->
+                <div class="bar-chart" id="dash-revenue-chart"></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Most Requested Services</div>
+                <div class="card-subtitle">By booking volume</div>
+              </div>
+              <div class="card-body">
+                <!-- Injected by admin_dashboard.js -->
+                <div style="display:flex;flex-direction:column;gap:12px;" id="dash-most-requested">
+                  <div style="color:var(--text-muted);font-size:13px;">loading…</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Upcoming Confirmed Appointments -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Upcoming Appointments</div>
+                <!-- subtitle removed per spec -->
+              </div>
+              <a class="btn btn-ghost btn-sm" href="#calendar">
+                <i class="fa-solid fa-calendar"></i> View Calendar
+              </a>
+            </div>
+            <!-- Appointment items injected by admin_dashboard.js -->
+            <div class="card-body" id="dash-upcoming-list" style="padding-top:14px;">
+              <div style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px 0;">
+                loading…
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /grid-2 revenue + upcoming -->
+
+      </section><!-- /dashboard -->
+
+      <!-- ════════════════════════════════════════════════
+     PAGE: CALENDAR
+════════════════════════════════════════════════ -->
+      <section class="app-section" id="calendar">
+
+        <div class="page-header">
+          <div>
+            <div class="page-title">Calendar</div>
+            <div class="page-subtitle" id="cal-subtitle">Weekly schedule view</div>
+          </div>
+        </div>
+
+        <!-- ── Controls bar ────────────────────────────── -->
+        <div class="cal-header">
+          <div class="cal-nav">
+            <button class="cal-nav-btn" id="cal-prev"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="cal-week-title" id="cal-range-label">—</div>
+            <button class="cal-nav-btn" id="cal-next"><i class="fa-solid fa-chevron-right"></i></button>
+            <button class="btn btn-ghost btn-sm" id="cal-today">Today</button>
+          </div>
+          <div class="cal-tabs">
+            <div class="cal-tab" data-view="day">Day</div>
+            <div class="cal-tab active" data-view="week">Week</div>
+            <div class="cal-tab" data-view="month">Month</div>
+          </div>
+        </div>
+
+        <!-- ── Legend + Status Filter ─────────────────── -->
+        <div class="cal-legend-row">
+          <div class="legend-chips" id="legend-chips">
+            <button class="legend-chip active" data-status="pending">
+              <span class="legend-dot" style="background:var(--warning)"></span>Pending
+            </button>
+            <button class="legend-chip active" data-status="waiting">
+              <span class="legend-dot" style="background:var(--purple)"></span>Waiting
+            </button>
+            <button class="legend-chip active" data-status="approved">
+              <span class="legend-dot" style="background:var(--primary)"></span>Approved
+            </button>
+            <button class="legend-chip active" data-status="confirmed">
+              <span class="legend-dot" style="background:var(--success)"></span>Confirmed
+            </button>
+            <button class="legend-chip active" data-status="awaiting_payment">
+              <span class="legend-dot" style="background:var(--orange)"></span>Awaiting Payment
+            </button>
+            <button class="legend-chip" data-status="completed">
+              <span class="legend-dot" style="background:#94a3b8"></span>Completed
+            </button>
+            <button class="legend-chip" data-status="cancelled">
+              <span class="legend-dot" style="background:#ef4444"></span>Cancelled
+            </button>
+          </div>
+        </div>
+
+        <!-- ── Calendar body (populated by JS) ─────────── -->
+        <div id="cal-body">
+          <div class="cal-loading">
+            <i class="fa-solid fa-spinner fa-spin"></i> Loading schedule…
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ── Booking Detail Modal ───────────────────────── -->
+      <div class="cal-modal-overlay" id="cal-modal" style="display:none;">
+        <div class="cal-modal">
+          <div class="cal-modal-header">
+            <div>
+              <div class="cal-modal-title" id="modal-service"></div>
+              <div class="cal-modal-sub" id="modal-date"></div>
+            </div>
+            <button class="cal-modal-close" id="cal-modal-close">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div class="cal-modal-body">
+            <div class="modal-field"><span class="modal-label">Client</span> <span id="modal-client">—</span></div>
+            <div class="modal-field"><span class="modal-label">Email</span> <span id="modal-email">—</span></div>
+            <div class="modal-field"><span class="modal-label">Phone</span> <span id="modal-phone">—</span></div>
+            <div class="modal-field"><span class="modal-label">Time Slot</span> <span id="modal-slot">—</span></div>
+            <div class="modal-field"><span class="modal-label">Type</span> <span id="modal-type">—</span></div>
+            <div class="modal-field"><span class="modal-label">Status</span> <span id="modal-status">—</span></div>
+            <div class="modal-field" id="modal-amount-row">
+              <span class="modal-label">Quotation</span><span id="modal-amount">—</span>
+            </div>
+            <div class="modal-field modal-concern">
+              <span class="modal-label">Concern</span><span id="modal-concern">—</span>
+            </div>
+          </div>
+          <div class="cal-modal-footer">
+            <a id="modal-view-btn" href="#" class="btn btn-primary btn-sm">View Full Details</a>
+            <button class="btn btn-ghost btn-sm" id="cal-modal-cancel">Close</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════
+         PAGE: BOOKINGS
+    ════════════════════════════════════════════════ -->
+      <section class="app-section" id="bookings">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Bookings</div>
+            <div class="page-subtitle">Manage all service requests and bookings</div>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> New Booking</button>
+          </div>
+        </div>
+
+        <!-- Stats strip -->
+        <div class="grid-5" style="margin-bottom:22px;">
+          <div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:12px;">
+            <div class="stat-icon si-amber" style="width:36px;height:36px;font-size:15px;"><i
+                class="fa-solid fa-hourglass-half"></i></div>
+            <div>
+              <div id="pending-count" style="font-size:18px;font-weight:800;">0</div>
+              <div style="font-size:11px;color:var(--text-muted);">Pending</div>
+            </div>
+          </div>
+          <div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:12px;">
+            <div class="stat-icon si-orange" style="width:36px;height:36px;font-size:15px;"><i
+                class="fa-solid fa-clock"></i></div>
+            <div>
+              <div id="waiting-count" style="font-size:18px;font-weight:800;">0</div>
+              <div style="font-size:11px;color:var(--text-muted);">Waiting</div>
+            </div>
+          </div>
+          <div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:12px;">
+            <div class="stat-icon si-green" style="width:36px;height:36px;font-size:15px;"><i
+                class="fa-solid fa-circle-check"></i></div>
+            <div>
+              <div id="confirmed-count" style="font-size:18px;font-weight:800;">0</div>
+              <div style="font-size:11px;color:var(--text-muted);">Confirmed</div>
+            </div>
+          </div>
+          <div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:12px;">
+            <div class="stat-icon si-teal" style="width:36px;height:36px;font-size:15px;"><i
+                class="fa-solid fa-flag-checkered"></i></div>
+            <div>
+              <div id="completed-count" style="font-size:18px;font-weight:800;">0</div>
+              <div style="font-size:11px;color:var(--text-muted);">Completed</div>
+            </div>
+          </div>
+          <div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:12px;">
+            <div class="stat-icon si-red" style="width:36px;height:36px;font-size:15px;"><i class="fa-solid fa-ban"></i>
+            </div>
+            <div>
+              <div id="cancelled-count" style="font-size:18px;font-weight:800;">0</div>
+              <div style="font-size:11px;color:var(--text-muted);">Cancelled</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="toolbar-search">
+            <i class="fa-solid fa-magnifying-glass" style="color:var(--text-light);font-size:12px;"></i>
+            <input type="text" placeholder="Search by client, service..." id="booking-search" />
+          </div>
+          <select class="form-control" id="booking-status-filter"
+            style="width:auto;padding:8px 28px 8px 12px;font-size:13px;">
+            <option>All Statuses</option>
+            <option>Pending</option>
+            <option>Waiting for Acceptance</option>
+            <option>Confirmed</option>
+            <option>Completed</option>
+            <option>Cancelled</option>
+          </select>
+          <select class="form-control" id="booking-category-filter"
+            style="width:auto;padding:8px 28px 8px 12px;font-size:13px;">
+            <option>All Categories</option>
+          </select>
+          <select class="form-control" id="booking-mode-filter"
+            style="width:auto;padding:8px 28px 8px 12px;font-size:13px;">
+            <option>All Modes</option>
+            <option>Walk In</option>
+            <option>Online</option>
+            <option>Home Service</option>
+          </select>
+          <div class="toolbar-right">
+            <select class="form-control" id="booking-sort-filter"
+              style="width:auto;padding:8px 28px 8px 12px;font-size:13px;">
+              <option>Sort: Newest</option>
+              <option>Sort: Oldest</option>
+              <option>Sort: Status</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Category</th>
+                <th>Service</th>
+                <th>Mode</th>
+                <th>Schedule</th>
+                <th>Submitted</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-bookings-body">
+
+              <tr>
+                <td colspan="8" class="empty-row">
+                  Loading bookings...
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </section><!-- /bookings -->
+
+      <!-- ════════════════════════════════════════════════
+     PAGE: REQUEST DETAIL
+════════════════════════════════════════════════ -->
+      <section class="app-section" id="detail">
+        <div class="page-header">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <button class="btn btn-ghost btn-sm"
+              onclick="switchPage('bookings',document.querySelector('[onclick*=bookings]'))">
+              <i class="fa-solid fa-arrow-left"></i> Back
+            </button>
+            <div>
+              <!-- CHANGE: Removed status badge from here; it now lives inside the Request Details card -->
+              <div class="page-title">Request Details</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <!-- Main Content -->
+          <div>
+            <!-- Client Info -->
+            <div class="card" style="margin-bottom:18px;">
+              <div class="card-header">
+                <!-- CHANGE: Removed "Active Client" badge from this header -->
+                <div class="card-title">
+                  <i class="fa-solid fa-user" style="color:var(--primary);margin-right:6px;"></i>
+                  Client Information
+                </div>
+              </div>
+              <div class="card-body">
+                <div style="display:flex;align-items:center;gap:18px;margin-bottom:18px;">
+                  <div class="avatar av-xl">MR</div>
+                  <div>
+                    <div style="font-size:20px;font-weight:800;letter-spacing:-.3px;">Maria Reyes</div>
+                    <!--
+                CHANGE: id="client-meta" added so JS can target and update
+                month/year of joining + total bookings count dynamically.
+              -->
+                    <div id="client-meta" style="font-size:13px;color:var(--text-muted);margin-top:3px;">
+                      Client since — · — total bookings
+                    </div>
+                    <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+                      <span style="display:flex;align-items:center;gap:5px;font-size:13px;">
+                        <i class="fa-solid fa-envelope" style="color:var(--primary);"></i>
+                        maria@email.com
+                      </span>
+                      <span style="display:flex;align-items:center;gap:5px;font-size:13px;">
+                        <i class="fa-solid fa-phone" style="color:var(--primary);"></i>
+                        +63 912 345 6789
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Request Info -->
+            <div class="card" style="margin-bottom:18px;">
+              <div class="card-header">
+                <div class="card-title">
+                  <i class="fa-solid fa-clipboard-list" style="color:var(--primary);margin-right:6px;"></i>
+                  Request Details
+                </div>
+                <!--
+            CHANGE: Status badge is now HERE (inside Request Details card),
+            NOT in the page header. JS targets this by id="detail-status-badge".
+          -->
+                <span class="badge badge-pending" id="detail-status-badge">Pending</span>
+              </div>
+              <div class="card-body">
+                <div class="form-row" style="margin-bottom:0;">
+                  <div>
+                    <div class="form-label">Service Category</div>
+                    <div
+                      style="font-size:14px;font-weight:600;padding:10px 13px;background:var(--bg);border-radius:8px;border:1.5px solid var(--border);">
+                      <i class="fa-solid fa-desktop" style="color:var(--primary);margin-right:7px;"></i>
+                      Computer Systems Maintenance
+                    </div>
+                  </div>
+                  <div>
+                    <div class="form-label">Service Requested</div>
+                    <div
+                      style="font-size:14px;font-weight:600;padding:10px 13px;background:var(--bg);border-radius:8px;border:1.5px solid var(--border);">
+                      PC Troubleshooting &amp; Diagnostics
+                    </div>
+                  </div>
+                  <div>
+                    <!--
+                CHANGE: Label was "Device Type" (or "Submitted" as placeholder).
+                Now explicitly "Date Submitted". JS fills this with formatDateTime(created_at).
+              -->
+                    <div class="form-label">Date Submitted</div>
+                    <div
+                      style="font-size:14px;font-weight:600;padding:10px 13px;background:var(--bg);border-radius:8px;border:1.5px solid var(--border);">
+                      —
+                    </div>
+                  </div>
+                  <div>
+                    <div class="form-label">Service Mode</div>
+                    <div
+                      style="padding:10px 13px;background:var(--bg);border-radius:8px;border:1.5px solid var(--border);">
+                      <span class="badge badge-walkin">Walk-in</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="form-label">Preferred Date</div>
+                    <div
+                      style="font-size:14px;font-weight:600;padding:10px 13px;background:var(--bg);border-radius:8px;border:1.5px solid var(--border);">
+                      May 18, 2026
+                    </div>
+                  </div>
+                  <div>
+                    <div class="form-label">Preferred Time</div>
+                    <div
+                      style="font-size:14px;font-weight:600;padding:10px 13px;background:var(--bg);border-radius:8px;border:1.5px solid var(--border);">
+                      9:00 AM – 11:00 AM
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:16px;">
+                  <div class="form-label">Client's Description / Concern</div>
+                  <div
+                    style="font-size:14px;line-height:1.7;padding:14px;background:var(--bg);border-radius:8px;border:1.5px solid var(--border);color:var(--text-muted);">
+                    My laptop has been running extremely slowly and overheating even with light usage.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Uploaded Files -->
+            <div class="card" style="margin-bottom:18px;">
+              <div class="card-header">
+                <div class="card-title">
+                  <i class="fa-solid fa-paperclip" style="color:var(--primary);margin-right:6px;"></i>
+                  Uploaded Files
+                </div>
+                <span style="font-size:12px;color:var(--text-muted);">2 files</span>
+              </div>
+              <!--
+          CHANGE: display:flex + flex-wrap:wrap + gap added so image tiles
+          sit side-by-side instead of stacking vertically.
+        -->
+              <div class="card-body uploaded-files-wrap"
+                style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;"></div>
+            </div>
+          </div>
+
+          <!-- Sidebar: Quotation & Actions -->
+          <div style="display:flex;flex-direction:column;gap:18px;">
+
+            <!-- Quick Actions -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Quick Actions</div>
+              </div>
+              <div class="card-body" id="quick-actions-body"></div>
+            </div>
+
+            <!-- Quotation -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">
+                  <i class="fa-solid fa-file-invoice-dollar" style="color:var(--primary);margin-right:6px;"></i>
+                  Send Quotation
+                </div>
+              </div>
+              <div class="card-body">
+                <div id="quotation-view" style="display:none;">
+                  <div class="quotation-display">
+                    <div class="quote-price">₱<span id="quote-amount-text">0</span></div>
+                    <div class="quote-note" id="quote-note-text"></div>
+                  </div>
+                </div>
+                <div id="quotation-form-wrap">
+                  <div class="quotation-form">
+                    <div class="form-group">
+                      <label class="form-label">Quotation Amount (₱)</label>
+                      <input type="number" class="form-control" id="quotation-amount" placeholder="e.g. 1500">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Admin Notes -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">
+                  <i class="fa-solid fa-note-sticky" style="color:var(--primary);margin-right:6px;"></i>
+                  Admin Notes
+                </div>
+              </div>
+              <div class="card-body">
+                <div id="admin-notes-view" style="display:none;">
+                  <div class="admin-note-display" id="admin-note-display"></div>
+                </div>
+                <div id="admin-notes-form-wrap">
+                  <textarea class="form-control" id="admin-notes"
+                    placeholder="Explain the quotation, diagnosis, rejection reason, or important notes..."
+                    style="min-height:120px;"></textarea>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section><!-- /detail -->
+
+      <!-- ════════════════════════════════════════════════
+     PAGE: CLIENTS
+════════════════════════════════════════════════ -->
+      <section class="app-section" id="clients">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Clients</div>
+            <div class="page-subtitle">All registered clients</div>
+          </div>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="grid-5" style="margin-bottom:22px;">
+
+          <div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:12px;">
+            <div class="stat-icon si-blue" style="width:36px;height:36px;font-size:15px;">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div>
+              <div id="clients-total" style="font-size:18px;font-weight:800;">0</div>
+              <div style="font-size:11px;color:var(--text-muted);">Total Clients</div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:12px;">
+            <div class="stat-icon si-green" style="width:36px;height:36px;font-size:15px;">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+              <div id="clients-active" style="font-size:18px;font-weight:800;">0</div>
+              <div style="font-size:11px;color:var(--text-muted);">Active</div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:12px;">
+            <div class="stat-icon si-slate" style="width:36px;height:36px;font-size:15px;">
+              <i class="fa-solid fa-user-slash"></i>
+            </div>
+            <div>
+              <div id="clients-inactive" style="font-size:18px;font-weight:800;">0</div>
+              <div style="font-size:11px;color:var(--text-muted);">Inactive</div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:12px;">
+            <div class="stat-icon si-purple" style="width:36px;height:36px;font-size:15px;">
+              <i class="fa-solid fa-user-plus"></i>
+            </div>
+            <div>
+              <div id="clients-new-month" style="font-size:18px;font-weight:800;">0</div>
+              <div style="font-size:11px;color:var(--text-muted);">New This Month</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+          <div class="toolbar-search">
+            <i class="fa-solid fa-magnifying-glass" style="color:var(--text-light);font-size:12px;"></i>
+            <input type="text" id="client-search" placeholder="Search by name, email, phone…">
+          </div>
+
+          <select class="form-control" id="client-status-filter"
+            style="width:auto;padding:8px 28px 8px 12px;font-size:13px;">
+            <option>All Clients</option>
+            <option>Active</option>
+            <option>Inactive</option>
+            <option>New (This Month)</option>
+          </select>
+
+          <div class="toolbar-right">
+            <select class="form-control" id="client-sort-filter"
+              style="width:auto;padding:8px 28px 8px 12px;font-size:13px;">
+              <option>Sort: Date Joined</option>
+              <option>Sort: Name A–Z</option>
+              <option>Sort: Most Bookings</option>
+              <option>Sort: Last Active</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Profile</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Date Joined</th>
+                <th>Last Activity</th>
+                <th>Bookings</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="clients-table-body">
+              <tr>
+                <td colspan="8" class="empty-row">Loading clients…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section><!-- /clients -->
+
+      <!-- ════════════════════════════════════════════════
+         PAGE: MY SERVICES
+    ════════════════════════════════════════════════ -->
+      <section class="app-section" id="services">
+  <div class="page-header">
+    <div>
+      <div class="page-title">My Services</div>
+      <div class="page-subtitle">Manage service categories, offerings, pricing & availability</div>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-ghost btn-sm"><i class="fa-solid fa-plus"></i> Add Category</button>
+      <button class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Add Service</button>
+      <button class="btn btn-ghost btn-sm" id="manage-slots-btn">
+  <i class="fa-solid fa-clock"></i> Time Slots
+</button>
+    </div>
+  </div>
+  <!-- dynamic content injected here by JS -->
+</section>
+
+      <!-- MESSAGES SECTION -->
+
+      <section class="app-section" id="messages">
+
+        <div class="page-header">
+          <div>
+            <div class="page-title">Messages</div>
+            <div class="page-subtitle" id="msg-unread-subtitle">Loading conversations…</div>
+          </div>
+        </div>
+
+        <div class="msg-layout">
+
+          <!-- ── COL 1 · Conversation list ──────────────────────────── -->
+          <aside class="msg-sidebar">
+
+            <div class="msg-sidebar-head">
+              <span>
+                <i class="fa-solid fa-message" style="color:var(--primary);margin-right:6px;"></i>
+                Conversations
+              </span>
+              <button class="icon-btn" title="Refresh" onclick="window.adminChat?.refresh()">
+                <i class="fa-solid fa-rotate-right"></i>
+              </button>
+            </div>
+
+            <div class="msg-search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" placeholder="Search clients…" id="convo-search">
+            </div>
+
+            <!-- Populated by admin-chat.js -->
+            <div class="convo-list" id="convo-list">
+              <div class="convo-empty-state" id="convo-empty">
+                <i class="fa-solid fa-comments" style="font-size:28px;color:var(--border);margin-bottom:10px;"></i>
+                <div style="font-size:12px;color:var(--text-light);">No conversations yet</div>
+              </div>
+            </div>
+
+          </aside>
+
+          <!-- ── COL 2 · Chat window ─────────────────────────────────── -->
+          <main class="msg-main">
+
+            <!-- Top bar — updated by JS when a convo is opened -->
+            <div class="msg-topbar">
+              <div class="msg-topbar-left">
+                <div class="convo-av-wrap">
+                  <div class="av av-blue" id="topbar-av">—</div>
+                </div>
+                <div>
+                  <div class="msg-topbar-name" id="topbar-name">Select a conversation</div>
+                </div>
+              </div>
+              <div class="msg-topbar-right">
+              </div>
+            </div>
+
+            <!-- Empty state shown before any conversation is selected -->
+            <div class="msg-feed" id="msg-feed">
+              <div class="msg-no-convo" id="msg-no-convo">
+                <i class="fa-solid fa-message" style="font-size:36px;color:var(--border);margin-bottom:14px;"></i>
+                <div style="font-size:14px;font-weight:600;color:var(--text-muted);">No conversation open</div>
+                <div style="font-size:12px;color:var(--text-light);margin-top:4px;">
+                  Select a client from the left to start chatting
+                </div>
+              </div>
+            </div>
+
+            <!-- Input area -->
+            <div class="msg-input-area">
+              <div class="admin-attach-preview" id="admin-attach-preview"></div>
+              <div class="msg-input-row">
+                <button class="icon-btn" title="Attach file"
+                  onclick="document.getElementById('admin-file-input').click()">
+                  <i class="fa-solid fa-paperclip"></i>
+                </button>
+                <div class="admin-input-box">
+                  <textarea class="admin-textarea" id="admin-message-input" rows="1"
+                    placeholder="Select a conversation to reply…" disabled></textarea>
+                </div>
+                <button class="btn btn-primary btn-xs admin-send-btn" id="admin-send-btn" disabled>
+                  <i class="fa-solid fa-paper-plane"></i> Send
+                </button>
+              </div>
+              <input type="file" id="admin-file-input" multiple accept="image/*,.pdf,.doc,.docx,.txt"
+                style="display:none;">
+            </div>
+
+          </main>
+
+          <!-- ── COL 3 · Client info ─────────────────────────────────── -->
+          <aside class="msg-info">
+
+            <div class="msg-info-head">
+              <i class="fa-solid fa-circle-info" style="color:var(--primary);margin-right:6px;"></i>
+              Client Info
+            </div>
+
+            <!-- Populated by admin-chat.js via get_client_info.php -->
+            <div class="msg-info-body" id="msg-info-body">
+
+              <!-- Empty state -->
+              <div id="info-empty-state" style="text-align:center;padding:40px 16px;">
+                <i class="fa-solid fa-user" style="font-size:28px;color:var(--border);margin-bottom:10px;"></i>
+                <div style="font-size:12px;color:var(--text-light);">
+                  Open a conversation to see client details
+                </div>
+              </div>
+
+              <!-- Filled state (hidden until a convo is opened) -->
+              <div id="info-filled-state" style="display:none;">
+
+                <!-- Profile -->
+                <div class="client-profile">
+                  <div class="av av-blue av-lg" id="info-av">—</div>
+                  <div class="client-pname" id="info-name">—</div>
+                  <div class="client-pemail" id="info-email">—</div>
+                  <div class="client-pphone" id="info-phone">—</div>
+                </div>
+
+                <div class="info-divider"></div>
+
+                <!-- Active requests -->
+                <div class="info-section-label">Active Requests</div>
+                <div id="info-bookings-list">
+                  <div style="font-size:12px;color:var(--text-light);padding:8px 0;">
+                    No active requests.
+                  </div>
+                </div>
+
+              </div><!-- /info-filled-state -->
+            </div><!-- /msg-info-body -->
+
+          </aside>
+
+        </div><!-- /msg-layout -->
+
+      </section><!-- /messages -->
+
+
+    </div><!-- /content -->
+  </div><!-- /main-wrap -->
+
+
+  <div class="image-viewer" id="admin-image-viewer">
+
+    <button class="viewer-close" id="viewer-close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <button class="viewer-nav viewer-prev" id="viewer-prev">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+
+    <img id="viewer-image">
+
+    <button class="viewer-nav viewer-next" id="viewer-next">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+
+  </div>
+
+  <!-- Admin login overlay -->
+  <div id="admin-login-overlay" style="
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55);
+    z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:16px; padding:36px 40px;
+              width:360px; box-shadow:0 20px 60px rgba(0,0,0,.2);">
+      <h2 style="margin:0 0 6px; font-size:20px;">Admin Login</h2>
+      <p style="margin:0 0 24px; color:#64748b; font-size:13px;">Enter your password to continue</p>
+      <input id="admin-pw-input" type="password" placeholder="Password" style="width:100%; padding:10px 14px; border:1.5px solid #e2e8f0;
+                  border-radius:8px; font-size:14px; box-sizing:border-box; margin-bottom:12px;">
+      <p id="admin-login-err" style="color:#ef4444; font-size:12px; margin:0 0 12px; display:none"></p>
+      <button id="admin-login-btn" style="width:100%; padding:11px; background:#2f4dcf; color:#fff;
+                   border:none; border-radius:8px; font-size:14px;
+                   font-weight:600; cursor:pointer;">
+        Sign In
+      </button>
+    </div>
+  </div>
+
+  <script>
+    (async function () {
+      // Check if already have a valid admin session
+      const res = await fetch("src/check_admin_session.php");
+      const data = await res.json();
+
+      if (!data.is_admin) {
+        const overlay = document.getElementById("admin-login-overlay");
+        overlay.style.display = "flex";
+
+        document.getElementById("admin-login-btn").addEventListener("click", async () => {
+          const pw = document.getElementById("admin-pw-input").value;
+          const err = document.getElementById("admin-login-err");
+          const r = await fetch("src/admin_login.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ password: pw })
+          });
+          const d = await r.json();
+          if (d.success) {
+            overlay.style.display = "none";
+          } else {
+            err.textContent = d.message;
+            err.style.display = "block";
+          }
+        });
+
+        document.getElementById("admin-pw-input").addEventListener("keydown", e => {
+          if (e.key === "Enter") document.getElementById("admin-login-btn").click();
+        });
+      }
+    })();
+  </script>
+
+  <div id="img-lightbox">
+    <img id="img-lightbox-src" src="" alt="Preview">
+  </div>
+
+  <script src="script/admin-logout.js"></script>
+  <script src="script/admin-services.js"></script>
+  <script src="script/admin-chat.js"></script>
+  <script src="script/admin_calendar.js"></script>
+  <script src="script/admin_dashboard.js"></script>
+  <script src="script/admin_clients.js"></script>
+  <script src="script/admin_bookings.js"></script>
+  <script src="script/admin_booking_detail.js"></script>
+</body>
+
+</html>

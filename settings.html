@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMPOWERED – Settings</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* ── Page layout ─────────────────────────────── */
+    .settings-page {
+      padding-top: calc(var(--nav-h) + 48px);
+      padding-bottom: 80px;
+      min-height: 100vh;
+      background: var(--surface);
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    /* ── Sidebar ─────────────────────────────────── */
+    .settings-sidebar {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      position: sticky;
+      top: calc(var(--nav-h) + 24px);
+    }
+
+    .sidebar-profile {
+      padding: 24px 20px;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .sidebar-avatar {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--primary); color: #fff;
+      font-size: 22px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px;
+    }
+    .sidebar-name  { font-size: 15px; font-weight: 700; }
+    .sidebar-email { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+    .sidebar-nav { padding: 8px; }
+    .sidebar-nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 8px;
+      font-size: 14px; font-weight: 500; color: var(--text-muted);
+      cursor: pointer; transition: all .15s;
+      text-decoration: none;
+    }
+    .sidebar-nav-item:hover { background: var(--surface); color: var(--text); }
+    .sidebar-nav-item.active {
+      background: var(--primary-light); color: var(--primary); font-weight: 600;
+    }
+    .sidebar-nav-item i { width: 16px; }
+
+    /* ── Cards ───────────────────────────────────── */
+    .settings-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .settings-card:last-child { margin-bottom: 0; }
+
+    .card-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .card-header-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: var(--primary-light); color: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; flex-shrink: 0;
+    }
+    .card-header-text h3 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+    .card-header-text p  { font-size: 13px; color: var(--text-muted); }
+
+    .card-body { padding: 24px; }
+
+    /* ── Form grid ───────────────────────────────── */
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group:last-child { margin-bottom: 0; }
+
+    .form-label {
+      display: block; font-size: 13px; font-weight: 600;
+      color: var(--text); margin-bottom: 7px;
+    }
+    .form-control {
+      width: 100%; padding: 10px 14px;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      font-family: 'Inter', sans-serif; font-size: 14px; color: var(--text);
+      background: var(--white); outline: none;
+      transition: border-color .18s, box-shadow .18s;
+    }
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+    .form-control:disabled {
+      background: var(--surface); color: var(--text-muted); cursor: not-allowed;
+    }
+
+    /* ── Alert banners ───────────────────────────── */
+    .alert {
+      display: none; padding: 12px 16px; border-radius: 8px;
+      font-size: 14px; margin-bottom: 18px;
+      align-items: center; gap: 10px;
+    }
+    .alert.show { display: flex; }
+    .alert-success { background: #f0fdf4; border: 1px solid #86efac; color: #166534; }
+    .alert-error   { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; }
+
+    /* ── Password field ──────────────────────────── */
+    .pw-wrap { position: relative; }
+    .pw-toggle {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; color: var(--text-muted);
+      padding: 0; font-size: 14px;
+    }
+    .pw-wrap .form-control { padding-right: 40px; }
+
+    /* ── Danger zone ─────────────────────────────── */
+    .danger-zone .card-header { border-bottom-color: #fca5a5; }
+    .danger-zone .card-header-icon { background: #fef2f2; color: var(--danger); }
+
+    /* ── Responsive ──────────────────────────────── */
+    @media (max-width: 768px) {
+      .settings-grid { grid-template-columns: 1fr; }
+      .settings-sidebar { position: static; }
+      .form-row-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════ NAVBAR ══════════════════════════════════ -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="customer.html" class="nav-logo">
+      <div class="logo-icon"><i class="fa-solid fa-lightbulb"></i></div>
+      EMPOWERED
+    </a>
+    <ul class="nav-links">
+      <li><a href="customer.html#home"><i class="fa-solid fa-house"></i> Home</a></li>
+      <li><a href="customer.html#services"><i class="fa-solid fa-wrench"></i> Services</a></li>
+      <li><a href="customer.html#about"><i class="fa-solid fa-circle-info"></i> About</a></li>
+                  <li class="auth-only" style="display:none;">
+                <a href="customer.html#my-requests"><i class="fa-solid fa-folder-open"></i> My Requests</a>
+            </li>
+            <li class="auth-only" style="display:none;">
+                <a href="customer.html#messages"><i class="fa-solid fa-inbox"></i> Inbox</a>
+            </li>
+    </ul>
+    <div class="nav-right">
+      <div id="guest-view"><a href="auth.html" class="btn btn-primary btn-sm">Log In</a></div>
+      <div id="user-view" style="display:none;">
+        <div class="dropdown user-menu">
+          <button class="dropdown-btn" tabindex="0">
+            <div class="avatar" id="user-avatar">U</div>
+            <span id="user-name">User</span>
+            <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>
+          </button>
+          <div class="dropdown-panel user-menu-content">
+            <div style="padding:12px 12px 4px">
+              <div id="user-fullname" style="font-size:14px;font-weight:700;"></div>
+              <div id="user-email" style="font-size:12px;color:var(--text-muted);margin-top:2px;"></div>
+            </div>
+            <div class="menu-divider"></div>
+            <a href="settings.html" style="text-decoration:none;">
+              <div class="menu-item active-page"><i class="fa-solid fa-gear"></i> Settings</div>
+            </a>
+            <div class="menu-divider"></div>
+            <div id="logout-btn" class="menu-item danger">
+              <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════ PAGE ══════════════════════════════════ -->
+<div class="settings-page">
+  <div class="container">
+
+    <div style="margin-bottom:28px;">
+      <h1 class="section-title" style="font-size:26px; margin-bottom:6px;">Settings</h1>
+      <p class="section-subtitle" style="font-size:15px;">Manage your account and preferences.</p>
+    </div>
+
+    <div class="settings-grid">
+
+      <!-- ══ SIDEBAR ══ -->
+      <aside class="settings-sidebar">
+        <div class="sidebar-profile">
+          <div class="sidebar-avatar" id="sb-avatar">U</div>
+          <div class="sidebar-name"  id="sb-name">Loading…</div>
+          <div class="sidebar-email" id="sb-email"></div>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="#personal-info" class="sidebar-nav-item active" data-section="personal-info">
+            <i class="fa-solid fa-user"></i> Personal Info
+          </a>
+          <a href="#change-password" class="sidebar-nav-item" data-section="change-password">
+            <i class="fa-solid fa-lock"></i> Change Password
+          </a>
+          <a href="#contact-prefs" class="sidebar-nav-item" data-section="contact-prefs">
+            <i class="fa-solid fa-bell"></i> Contact Preferences
+          </a>
+        </nav>
+      </aside>
+
+      <!-- ══ MAIN CONTENT ══ -->
+      <div class="settings-main">
+
+        <!-- ── Personal Info ── -->
+        <div class="settings-card" id="personal-info">
+          <div class="card-header">
+            <div class="card-header-icon"><i class="fa-solid fa-user"></i></div>
+            <div class="card-header-text">
+              <h3>Personal Information</h3>
+              <p>Update your name, email address, and phone number.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="info-alert" class="alert"></div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label">First Name</label>
+                <input id="first_name" class="form-control" type="text" placeholder="First name">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input id="last_name" class="form-control" type="text" placeholder="Last name">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input id="email" class="form-control" type="email" placeholder="you@example.com">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input id="phone" class="form-control" type="tel" placeholder="09XXXXXXXXX">
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; margin-top:8px;">
+              <button id="save-info-btn" class="btn btn-primary">
+                <i class="fa-solid fa-floppy-disk"></i> Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Change Password ── -->
+        <div class="settings-card" id="change-password">
+          <div class="card-header">
+            <div class="card-header-icon"><i class="fa-solid fa-lock"></i></div>
+            <div class="card-header-text">
+              <h3>Change Password</h3>
+              <p>Use a strong password you don't use anywhere else.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="pw-alert" class="alert"></div>
+
+            <div class="form-group">
+              <label class="form-label">Current Password</label>
+              <div class="pw-wrap">
+                <input id="current_password" class="form-control" type="password" placeholder="••••••••">
+                <button class="pw-toggle" type="button" onclick="togglePw('current_password', this)">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label">New Password</label>
+                <div class="pw-wrap">
+                  <input id="new_password" class="form-control" type="password" placeholder="••••••••">
+                  <button class="pw-toggle" type="button" onclick="togglePw('new_password', this)">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Confirm New Password</label>
+                <div class="pw-wrap">
+                  <input id="confirm_password" class="form-control" type="password" placeholder="••••••••">
+                  <button class="pw-toggle" type="button" onclick="togglePw('confirm_password', this)">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Strength bar -->
+            <div style="height:4px;border-radius:4px;background:var(--border);margin-bottom:4px;overflow:hidden;">
+              <div id="pw-strength-bar" style="height:100%;width:0;border-radius:4px;transition:width .3s,background .3s;"></div>
+            </div>
+            <div id="pw-strength-label" style="font-size:12px;color:var(--text-muted);margin-bottom:18px;"></div>
+
+            <div style="display:flex; justify-content:flex-end;">
+              <button id="save-pw-btn" class="btn btn-primary">
+                <i class="fa-solid fa-floppy-disk"></i> Update Password
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Contact Preferences ── -->
+        <div class="settings-card" id="contact-prefs">
+          <div class="card-header">
+            <div class="card-header-icon"><i class="fa-solid fa-bell"></i></div>
+            <div class="card-header-text">
+              <h3>Contact Preferences</h3>
+              <p>Choose how you'd like us to reach you.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="prefs-alert" class="alert"></div>
+
+            <div class="form-group">
+              <label class="form-label">Preferred Contact Method</label>
+              <select id="preferred_contact" class="form-control">
+                <option value="email">Email</option>
+                <option value="phone">Phone Call</option>
+                <option value="sms">SMS</option>
+              </select>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end;">
+              <button id="save-prefs-btn" class="btn btn-primary">
+                <i class="fa-solid fa-floppy-disk"></i> Save Preferences
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /.settings-main -->
+    </div><!-- /.settings-grid -->
+  </div><!-- /.container -->
+</div><!-- /.settings-page -->
+
+       <!-- ══════════════════════════════════════════════════════════ -->
+        <!--  FOOTER                                                    -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <footer>
+            <div class="container">
+                <div class="footer-grid">
+                    <div>
+                        <div class="footer-logo">
+                            <div class="logo-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                            EMPOWERED
+                        </div>
+                        <p class="footer-desc">
+                            A professional freelance services platform offering computer system maintenance and academic
+                            consultation from a licensed electrical engineer. Reliable, expert, and always client-first.
+                        </p>
+                        <div style="display:flex;gap:10px;margin-top:20px;">
+                            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s;"
+                                onmouseover="this.style.background='rgba(255,255,255,.2)'"
+                                onmouseout="this.style.background='rgba(255,255,255,.1)'">
+                                <i class="fa-brands fa-facebook-f" style="color:#fff;font-size:13px;"></i>
+                            </div>
+                            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s;"
+                                onmouseover="this.style.background='rgba(255,255,255,.2)'"
+                                onmouseout="this.style.background='rgba(255,255,255,.1)'">
+                                <i class="fa-brands fa-linkedin-in" style="color:#fff;font-size:13px;"></i>
+                            </div>
+                            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s;"
+                                onmouseover="this.style.background='rgba(255,255,255,.2)'"
+                                onmouseout="this.style.background='rgba(255,255,255,.1)'">
+                                <i class="fa-brands fa-instagram" style="color:#fff;font-size:13px;"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="footer-col">
+                        <h5>Navigation</h5>
+                        <a href="#home">Home</a>
+                        <a href="#about">About</a>
+                        <a href="#services">Services</a>
+                        <a href="#request-service">Request a Service</a>
+                        <a href="#my-requests">My Requests</a>
+                        <a href="admin-auth.html">Admin</a>
+                    </div>
+
+                    <div class="footer-col">
+                        <h5>Contact</h5>
+                        <p><i class="fa-solid fa-envelope" style="width:16px;"></i> &nbsp;contact@empowered.ph</p>
+                        <p><i class="fa-solid fa-phone" style="width:16px;"></i> &nbsp;+63 900 000 0000</p>
+                        <p><i class="fa-solid fa-location-dot" style="width:16px;"></i> &nbsp;Dasmariñas City,
+                            Philippines</p>
+                        <p style="margin-top:14px;font-size:12px;color:rgba(255,255,255,.4);">
+                            Response time: within 24 hours
+                        </p>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <span>© 2025 <strong style="color:#fff;">EMPOWERED</strong>. All rights reserved.</span>
+                    <div style="display:flex;gap:20px;">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+<!-- Logout Modal -->
+<div id="logout-modal" class="modal-overlay" style="display:none;">
+  <div class="modal-box" style="max-width:400px;text-align:center;">
+    <div style="width:56px;height:56px;border-radius:50%;background:#fef2f2;display:flex;
+                align-items:center;justify-content:center;margin:0 auto 18px;font-size:22px;color:var(--danger);">
+      <i class="fa-solid fa-right-from-bracket"></i>
+    </div>
+    <h3 style="font-size:19px;font-weight:800;margin-bottom:8px;">Log out?</h3>
+    <p style="color:var(--text-muted);font-size:14px;margin-bottom:26px;">You'll need to log back in to access your account.</p>
+    <div style="display:flex;gap:12px;justify-content:center;">
+      <button id="cancel-logout" class="btn btn-ghost">Cancel</button>
+      <button id="confirm-logout" class="btn btn-danger">Log Out</button>
+    </div>
+  </div>
+</div>
+
+<script src="script/session_check.js"></script>
+<script>
+// ── Load user data into form ──────────────────────────────────
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const res  = await fetch("src/check_session.php");
+    const data = await res.json();
+
+    if (!data.logged_in) {
+      window.location.href = "auth.html";
+      return;
+    }
+
+    // Sidebar profile
+    document.getElementById("sb-name").textContent  = data.user_name;
+    document.getElementById("sb-email").textContent = data.user_email;
+const nameParts = data.user_name.trim().split(/\s+/);
+
+let initials = "";
+
+if (nameParts.length === 1) {
+  initials = nameParts[0][0];
+} else {
+  initials =
+    nameParts[0][0] +
+    nameParts[nameParts.length - 1][0];
+}
+
+initials = initials.toUpperCase();
+    document.getElementById("sb-avatar").textContent = initials;
+
+    // Load full profile from server
+    const pRes  = await fetch("src/get_profile.php");
+    const pData = await pRes.json();
+
+    if (pData.success) {
+      document.getElementById("first_name").value = pData.first_name  || "";
+      document.getElementById("last_name").value  = pData.last_name   || "";
+      document.getElementById("email").value      = pData.email       || "";
+      document.getElementById("phone").value      = pData.phone       || "";
+      document.getElementById("preferred_contact").value = pData.preferred_contact || "email";
+    }
+
+  } catch (err) {
+    console.error("Settings load error:", err);
+  }
+});
+
+// ── Save personal info ────────────────────────────────────────
+document.getElementById("save-info-btn").addEventListener("click", async () => {
+  const btn   = document.getElementById("save-info-btn");
+  const alert = document.getElementById("info-alert");
+
+  const fd = new FormData();
+  fd.append("action",     "update_info");
+  fd.append("first_name", document.getElementById("first_name").value.trim());
+  fd.append("last_name",  document.getElementById("last_name").value.trim());
+  fd.append("email",      document.getElementById("email").value.trim());
+  fd.append("phone",      document.getElementById("phone").value.trim());
+
+  await submitForm(btn, alert, fd, "src/update_profile.php", "Changes saved!");
+});
+
+// ── Save password ─────────────────────────────────────────────
+document.getElementById("save-pw-btn").addEventListener("click", async () => {
+  const btn   = document.getElementById("save-pw-btn");
+  const alert = document.getElementById("pw-alert");
+  const np    = document.getElementById("new_password").value;
+  const cp    = document.getElementById("confirm_password").value;
+
+  if (np !== cp) {
+    showAlert(alert, "error", "New passwords do not match.");
+    return;
+  }
+  if (np.length < 8) {
+    showAlert(alert, "error", "Password must be at least 8 characters.");
+    return;
+  }
+
+  const fd = new FormData();
+  fd.append("action",           "update_password");
+  fd.append("current_password", document.getElementById("current_password").value);
+  fd.append("new_password",     np);
+
+  const ok = await submitForm(btn, alert, fd, "src/update_profile.php", "Password updated!");
+  if (ok) {
+    document.getElementById("current_password").value = "";
+    document.getElementById("new_password").value     = "";
+    document.getElementById("confirm_password").value = "";
+  }
+});
+
+// ── Save contact preferences ──────────────────────────────────
+document.getElementById("save-prefs-btn").addEventListener("click", async () => {
+  const btn   = document.getElementById("save-prefs-btn");
+  const alert = document.getElementById("prefs-alert");
+
+  const fd = new FormData();
+  fd.append("action",            "update_prefs");
+  fd.append("preferred_contact", document.getElementById("preferred_contact").value);
+
+  await submitForm(btn, alert, fd, "src/update_profile.php", "Preferences saved!");
+});
+
+// ── Helpers ───────────────────────────────────────────────────
+async function submitForm(btn, alertEl, formData, url, successMsg) {
+  const origText    = btn.innerHTML;
+  btn.disabled      = true;
+  btn.innerHTML     = '<i class="fa-solid fa-spinner fa-spin"></i> Saving…';
+  alertEl.className = "alert";
+
+  try {
+    const res  = await fetch(url, { method: "POST", body: formData });
+    const data = await res.json();
+
+    if (data.success) {
+      showAlert(alertEl, "success", successMsg);
+      // Update navbar name if name was changed
+      if (data.user_name) {
+        document.getElementById("user-name").textContent     = data.user_name;
+        document.getElementById("user-fullname").textContent = data.user_name;
+        document.getElementById("sb-name").textContent       = data.user_name;
+        const initials = data.user_name.split(" ").map(n => n[0]).join("").toUpperCase();
+        document.getElementById("user-avatar").textContent   = initials;
+        document.getElementById("sb-avatar").textContent     = initials;
+      }
+      return true;
+    } else {
+      showAlert(alertEl, "error", data.message);
+      return false;
+    }
+  } catch {
+    showAlert(alertEl, "error", "Server error. Please try again.");
+    return false;
+  } finally {
+    btn.disabled  = false;
+    btn.innerHTML = origText;
+  }
+}
+
+function showAlert(el, type, msg) {
+  el.className = `alert alert-${type} show`;
+  el.innerHTML = `<i class="fa-solid fa-${type === 'success' ? 'circle-check' : 'circle-xmark'}"></i> ${msg}`;
+  setTimeout(() => el.classList.remove("show"), 5000);
+}
+
+// ── Password strength ─────────────────────────────────────────
+document.getElementById("new_password").addEventListener("input", function () {
+  const val  = this.value;
+  let score  = 0;
+  if (val.length >= 8)          score++;
+  if (/[A-Z]/.test(val))        score++;
+  if (/[0-9]/.test(val))        score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+
+  const map = [
+    { pct:"0%",   color:"#e5e7eb", text:"" },
+    { pct:"25%",  color:"#ef4444", text:"Weak" },
+    { pct:"50%",  color:"#f97316", text:"Fair" },
+    { pct:"75%",  color:"#eab308", text:"Good" },
+    { pct:"100%", color:"#22c55e", text:"Strong" },
+  ];
+  const bar   = document.getElementById("pw-strength-bar");
+  const label = document.getElementById("pw-strength-label");
+  bar.style.width      = map[score].pct;
+  bar.style.background = map[score].color;
+  label.textContent    = val.length > 0 ? map[score].text : "";
+  label.style.color    = map[score].color;
+});
+
+// ── Toggle password visibility ────────────────────────────────
+function togglePw(id, btn) {
+  const input = document.getElementById(id);
+  const icon  = btn.querySelector("i");
+  if (input.type === "password") {
+    input.type = "text";
+    icon.classList.replace("fa-eye", "fa-eye-slash");
+  } else {
+    input.type = "password";
+    icon.classList.replace("fa-eye-slash", "fa-eye");
+  }
+}
+
+// ── Sidebar scroll spy ────────────────────────────────────────
+document.querySelectorAll(".sidebar-nav-item[data-section]").forEach(link => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault();
+    document.querySelectorAll(".sidebar-nav-item").forEach(l => l.classList.remove("active"));
+    link.classList.add("active");
+    const target = document.getElementById(link.dataset.section);
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
+</script>
+
+</body>
+</html>

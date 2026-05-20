@@ -1,0 +1,182 @@
+<!-- admin_auth.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EMPOWERED - Admin Login</title>
+
+    <link rel="stylesheet" href="styles/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        /* OPTIONAL SMALL OVERRIDES */
+        .admin-auth-right {
+            flex: 0 0 45%;
+            max-width: 45%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .admin-login-card {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .admin-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(99,102,241,.08);
+            color: #4f46e5;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        .admin-login-btn {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 900px) {
+            .auth-left {
+                display: none;
+            }
+
+            .admin-auth-right {
+                flex: 1;
+                max-width: 100%;
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="container navbar-inner" style="justify-content:flex-start;">
+        <a href="customer.html" class="nav-logo" style="margin-right:auto;">
+            <div class="logo-icon">
+                <i class="fa-solid fa-lightbulb"></i>
+            </div>
+            EMPOWERED
+        </a>
+    </div>
+</nav>
+
+<!-- AUTH CONTAINER -->
+<div class="auth-container">
+
+    <!-- LEFT IMAGE -->
+    <div class="auth-left">
+        <img src="res/signupbg.png" alt="background">
+    </div>
+
+    <!-- RIGHT -->
+    <div class="admin-auth-right">
+
+        <div class="admin-login-card">
+            
+            <h1 class="section-title" style="font-size:30px;">
+                Admin Login
+            </h1>
+
+            <!-- LOGIN FORM -->
+            <div class="auth-form active" style="display:block;">
+
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input
+                        id="admin_username"
+                        class="form-control"
+                        type="text"
+                        placeholder="Enter admin username"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input
+                        id="admin_password"
+                        class="form-control"
+                        type="password"
+                        placeholder="Enter password"
+                    />
+                </div>
+
+                <p id="admin-error" class="error-msg"></p>
+
+                <button
+                    id="admin-login-btn"
+                    class="btn btn-primary btn-lg admin-login-btn"
+                >
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    Log In
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const loginBtn = document.getElementById("admin-login-btn");
+
+    loginBtn.addEventListener("click", async () => {
+
+        const username = document.getElementById("admin_username").value.trim();
+        const password = document.getElementById("admin_password").value;
+
+        const error = document.getElementById("admin-error");
+        error.textContent = "";
+
+        if (!username || !password) {
+            error.textContent = "Please fill in all fields.";
+            return;
+        }
+
+        try {
+
+            const res = await fetch("src/other_admin_login.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username,
+                    password
+                })
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                window.location.href = "admin.html";
+            } else {
+                error.textContent = data.message || "Invalid credentials.";
+            }
+
+        } catch (err) {
+            error.textContent = "Server error. Please try again.";
+            console.error(err);
+        }
+
+    });
+
+});
+</script>
+
+</body>
+</html>

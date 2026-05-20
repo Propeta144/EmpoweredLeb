@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EMPOWERED – Professional Services</title>
+    <link rel="stylesheet" href="styles/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+</head>
+    <main>
+        <body>
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!--  NAVBAR                                                     -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <nav class="navbar">
+    <div class="container navbar-inner">
+ 
+        <!-- Logo -->
+        <a href="#home" class="nav-logo">
+            <div class="logo-icon"><i class="fa-solid fa-lightbulb"></i></div>
+            EMPOWERED
+        </a>
+ 
+        <!-- Nav Links — always visible -->
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#home"><i class="fa-solid fa-house"></i> Home</a></li>
+            <li><a href="#services"><i class="fa-solid fa-wrench"></i> Services</a></li>
+            <li><a href="#about"><i class="fa-solid fa-circle-info"></i> About</a></li>
+ 
+            <!-- Only shown when logged in -->
+            <li class="auth-only" style="display:none;">
+                <a href="#my-requests"><i class="fa-solid fa-folder-open"></i> My Requests</a>
+            </li>
+            <li class="auth-only" style="display:none;">
+                <a href="#messages"><i class="fa-solid fa-inbox"></i> Inbox</a>
+            </li>
+        </ul>
+ 
+        <div class="nav-right">
+ 
+            <!-- 🔒 NOT LOGGED IN -->
+            <div id="guest-view">
+                <a href="auth.html" class="btn btn-primary btn-sm">Log In</a>
+            </div>
+ 
+            <!-- 🔓 LOGGED IN -->
+            <div id="user-view" style="display:none;">
+                <div class="dropdown user-menu">
+                    <button class="dropdown-btn" tabindex="0">
+                        <div class="avatar" id="user-avatar">U</div>
+                        <span id="user-name">User</span>
+                        <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>
+                    </button>
+ 
+                    <div class="dropdown-panel user-menu-content">
+                        <div style="padding:12px 12px 4px">
+                            <div id="user-fullname" style="font-size:14px;font-weight:700;"></div>
+                            <div id="user-email" style="font-size:12px;color:var(--text-muted);margin-top:2px;"></div>
+                        </div>
+ 
+                        <div class="menu-divider"></div>
+ 
+                        <a href="settings.html" style="text-decoration:none;">
+                            <div class="menu-item"><i class="fa-solid fa-gear"></i> Settings</div>
+                        </a>
+ 
+                        <div class="menu-divider"></div>
+ 
+                        <div id="logout-btn" class="menu-item danger">
+                            <i class="fa-solid fa-right-from-bracket"></i> Logout
+                        </div>
+                    </div>
+                </div>
+            </div>
+ 
+        </div>
+    </div>
+</nav>
+ 
+ 
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  MODAL: Login Required (shown when guest clicks Request)  -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div id="login-required-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-box" style="max-width:420px; text-align:center;">
+        <div style="width:60px;height:60px;border-radius:50%;background:var(--primary-light);
+                    display:flex;align-items:center;justify-content:center;
+                    margin:0 auto 20px; font-size:24px; color:var(--primary);">
+            <i class="fa-solid fa-lock"></i>
+        </div>
+        <h3 style="font-size:20px;font-weight:800;margin-bottom:10px;">Log in to continue</h3>
+        <p style="color:var(--text-muted);font-size:14px;margin-bottom:28px;line-height:1.6;">
+            You need an account to request a service. It only takes a minute to sign up!
+        </p>
+        <div style="display:flex;gap:12px;justify-content:center;">
+            <button id="login-required-cancel" class="btn btn-ghost">Maybe Later</button>
+            <a href="auth.html" class="btn btn-primary">Log In / Sign Up</a>
+        </div>
+    </div>
+</div>
+ 
+ 
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  MODAL: Logout Confirmation                               -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div id="logout-modal" class="modal-overlay">
+    <div class="modal-box" style="max-width:400px; text-align:center;">
+        <div style="width:56px;height:56px;border-radius:50%;background:#fef2f2;
+                    display:flex;align-items:center;justify-content:center;
+                    margin:0 auto 18px; font-size:22px; color:var(--danger);">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </div>
+        <h3 style="font-size:19px;font-weight:800;margin-bottom:8px;">Log out?</h3>
+        <p style="color:var(--text-muted);font-size:14px;margin-bottom:26px;">
+            You'll need to log back in to access your account.
+        </p>
+        <div style="display:flex;gap:12px;justify-content:center;">
+            <button id="cancel-logout" class="btn btn-ghost">Cancel</button>
+            <button id="confirm-logout" class="btn btn-danger">Log Out</button>
+        </div>
+    </div>
+</div>
+
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!--  HERO SECTION                                              -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <section id="home">
+            <div class="container">
+                <div class="hero-grid">
+
+                    <!-- Left: Copy -->
+                    <div>
+
+                        <h1 class="hero-h1">
+                            Expert Solutions<br>
+                            <em>Delivered</em> with<br>
+                            Purpose.
+                        </h1>
+                        <p class="hero-desc">
+                            EMPOWERED connects you with a licensed engineering professional for computer system
+                            maintenance, academic consultation, and technical mentoring — right when you need it.
+                        </p>
+                        <div class="hero-cta">
+                            <a href="#request-service" class="btn btn-primary btn-lg">
+                                <i class="fa-solid fa-bolt"></i> Request a Service
+                            </a>
+                            <a href="#services" class="btn btn-ghost btn-lg">
+                                <i class="fa-solid fa-grid-2"></i> Browse Services
+                            </a>
+                        </div>
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <span class="stat-num">5+</span>
+                                <span class="stat-label">Years Experience</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-num">120+</span>
+                                <span class="stat-label">Clients Served</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-num">98%</span>
+                                <span class="stat-label">Satisfaction Rate</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Visual Card -->
+                    <div class="hero-visual">
+                        <div style="position:relative; width:100%; max-width:380px;">
+                            <div class="hero-card-float">
+                                <div class="hcf-tag"><i class="fa-solid fa-circle-check"
+                                        style="color:var(--success)"></i> &nbsp;How It Works</div>
+                                <div class="hcf-title">Get help in 3 simple steps</div>
+                                <div class="hcf-sub">Professional service, delivered seamlessly.</div>
+                                <div class="hcf-steps">
+                                    <div class="hcf-step">
+                                        <div class="step-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                                        <div>
+                                            <div class="hcf-step-text">Browse Services</div>
+                                            <div class="hcf-step-sub">Explore computer & academic options</div>
+                                        </div>
+                                    </div>
+                                    <div class="hcf-step">
+                                        <div class="step-icon green"><i class="fa-solid fa-calendar-check"></i></div>
+                                        <div>
+                                            <div class="hcf-step-text">Submit a Request</div>
+                                            <div class="hcf-step-sub">Set your schedule and preferences</div>
+                                        </div>
+                                    </div>
+                                    <div class="hcf-step">
+                                        <div class="step-icon gold"><i class="fa-solid fa-star"></i></div>
+                                        <div>
+                                            <div class="hcf-step-text">Receive Expert Service</div>
+                                            <div class="hcf-step-sub">Professional evaluation &amp; quotation</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="float-pill pill-tl">
+                                <div class="dot"></div>
+                                Available Now
+                            </div>
+                            <div class="float-pill pill-br">
+                                <i class="fa-solid fa-shield-halved" style="color:var(--primary);font-size:11px;"></i>
+                                Licensed Engineer
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!--  ABOUT THE PROFESSIONAL                                    -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <section id="about" class="section section-alt">
+            <div class="container">
+                <div class="about-grid">
+
+                    <!-- Profile Card -->
+                    <div class="about-card">
+                        <div class="about-card-top">
+                            <div class="prof-avatar"><i class="fa-solid fa-user-tie"></i></div>
+                            <div class="prof-name">Engr. Christian M. Mengote</div>
+                            <div class="prof-role">Licensed Electrical Engineer</div>
+                        </div>
+                        <div class="about-card-body">
+                            <div class="cred-item">
+                                <div class="cred-icon"><i class="fa-solid fa-award"></i></div>
+                                <div>
+                                    <div class="cred-label">License</div>
+                                    <div class="cred-val">Professional Electrical Engineer (PEE)</div>
+                                </div>
+                            </div>
+                            <div class="cred-item">
+                                <div class="cred-icon"><i class="fa-solid fa-briefcase"></i></div>
+                                <div>
+                                    <div class="cred-label">Specialization</div>
+                                    <div class="cred-val">Engineering Systems Consultant</div>
+                                </div>
+                            </div>
+                            <div class="cred-item">
+                                <div class="cred-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                                <div>
+                                    <div class="cred-label">Education</div>
+                                    <div class="cred-val">BS Electrical Engineering</div>
+                                </div>
+                            </div>
+                            <div class="cred-item">
+                                <div class="cred-icon"><i class="fa-solid fa-location-dot"></i></div>
+                                <div>
+                                    <div class="cred-label">Service Area</div>
+                                    <div class="cred-val">Dasmariñas City &amp; Nearby Cities</div>
+                                </div>
+                            </div>
+                            <div style="margin-top:18px;">
+                                <a href="#request-service" class="btn btn-primary"
+                                    style="width:100%;justify-content:center;">
+                                    <i class="fa-solid fa-calendar-plus"></i> Book a Consultation
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- About Content -->
+                    <div class="about-content">
+                        <h2 class="section-title">Engineering Expertise<br>You Can Trust</h2>
+                        <p class="section-subtitle">
+                            EMPOWERED is built on the foundation of real engineering knowledge and a passion for helping
+                            individuals and students succeed. Whether you need your PC fixed or your circuits understood
+                            — this is the right place.
+                        </p>
+                        <p style="margin-top:16px;font-size:15px;color:var(--text-muted);line-height:1.75;">
+                            With over 5 years of hands-on experience in systems maintenance and engineering education, I
+                            provide reliable, affordable, and professional services tailored to your unique needs. Every
+                            engagement is handled with precision, confidentiality, and a commitment to your
+                            satisfaction.
+                        </p>
+
+                        <div class="trust-grid">
+                            <div class="trust-card">
+                                <div class="trust-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                                <div class="trust-title">Fully Licensed</div>
+                                <div class="trust-desc">All services provided by a PRC-licensed professional engineer.
+                                </div>
+                            </div>
+                            <div class="trust-card">
+                                <div class="trust-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                                <div class="trust-title">Prompt Response</div>
+                                <div class="trust-desc">Quotations and replies sent within 24 hours of submission.</div>
+                            </div>
+                            <div class="trust-card">
+                                <div class="trust-icon"><i class="fa-solid fa-handshake"></i></div>
+                                <div class="trust-title">Client-Centered</div>
+                                <div class="trust-desc">Services designed around your budget, schedule, and goals.</div>
+                            </div>
+                            <div class="trust-card">
+                                <div class="trust-icon"><i class="fa-solid fa-lock"></i></div>
+                                <div class="trust-title">Confidential</div>
+                                <div class="trust-desc">Your data and academic needs are handled with full discretion.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!--  SERVICES SECTION                                          -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <section id="services" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">What Can I Help You With?</h2>
+                    <p class="section-subtitle">Choose from two core service categories, available in flexible modes to
+                        match your schedule and situation.</p>
+                </div>
+
+                <div class="services-grid" id="services-grid"></div>
+            </div>
+        </section>
+
+
+        <!-- SERVICE DETAILS -->
+        <section id="service-details" class="section section-alt">
+
+            <div class="container">
+
+                <div class="detail-grid">
+
+                    <!-- LEFT -->
+                    <div class="detail-main">
+
+
+                        <h2 class="detail-title" id="detail-title">
+                            --
+                        </h2>
+
+                        <p class="detail-desc" id="detail-description">
+                            --
+                        </p>
+
+                        <div class="subservice-list" id="services-container">
+                        </div>
+
+                        <a href="#request-service" class="btn btn-primary btn-lg">
+
+                            <i class="fa-solid fa-bolt"></i>
+
+                            Request This Service
+
+                        </a>
+
+                    </div>
+
+
+                    <!-- RIGHT -->
+                    <div class="detail-sidebar">
+
+                        <div class="info-card">
+
+                            <div class="info-card-head">
+
+                                <h4>Service Overview</h4>
+
+                                <p id="overview-category-name">
+                                    --
+                                </p>
+
+                            </div>
+
+                            <div class="info-card-body">
+
+
+                                <!-- PRICE -->
+                                <div class="info-row">
+
+                                    <i class="fa-solid fa-tag info-row-icon"></i>
+
+                                    <div>
+
+                                        <div class="info-row-label">
+                                            Price Range
+                                        </div>
+
+                                        <div class="price-range" id="overview-price">
+                                            --
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- SCHEDULE -->
+                                <div class="info-row">
+
+                                    <i class="fa-solid fa-calendar info-row-icon"></i>
+
+                                    <div>
+
+                                        <div class="info-row-label">
+                                            Available Schedule
+                                        </div>
+
+                                        <div id="overview-schedules"></div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- MODES -->
+                                <div class="info-row">
+
+                                    <i class="fa-solid fa-location-dot info-row-icon"></i>
+
+                                    <div>
+
+                                        <div class="info-row-label">
+                                            Service Modes
+                                        </div>
+
+                                        <div id="overview-modes"
+                                            style="margin-top:6px;display:flex;flex-direction:column;gap:6px;">
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- DURATION -->
+                                <div class="info-row">
+
+                                    <i class="fa-solid fa-clock info-row-icon"></i>
+
+                                    <div>
+
+                                        <div class="info-row-label">
+                                            Estimated Duration
+                                        </div>
+
+                                        <div class="info-row-val" id="overview-duration">
+                                            --
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- SERVICES OFFERED -->
+                                <div class="info-row">
+
+                                    <i class="fa-solid fa-list-check info-row-icon"></i>
+
+                                    <div>
+
+                                        <div class="info-row-label">
+                                            Services Offered
+                                        </div>
+
+                                        <ul id="overview-items"></ul>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!--  REQUEST SERVICE FORM                                      -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <section id="request-service" class="section section-alt">
+            <div class="container">
+                <div class="section-header" style="text-align:center;">
+                    <h2 class="section-title">Submit a Service Request</h2>
+                    <p class="section-subtitle" style="margin:0 auto;">Fill in the details below and the professional
+                        will get back to you with a quotation within 24 hours.</p>
+                </div>
+
+                <div class="form-card">
+                    <div class="form-card-head">
+                        <h3><i class="fa-solid fa-clipboard-list"></i> &nbsp;Service Request Form</h3>
+                        <p>All fields marked with * are required. You'll receive a confirmation once submitted.</p>
+                    </div>
+                    <div class="form-body">
+                        <form id="booking-form" enctype="multipart/form-data">
+
+                            <!-- CATEGORY -->
+                            <div class="form-group">
+
+                                <label class="form-label">
+                                    Service Category <span>*</span>
+                                </label>
+
+                                <select class="form-control" id="category-select" required>
+
+                                    <option value="">
+                                        Select category
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- SERVICE -->
+                            <div class="form-group">
+
+                                <label class="form-label">
+                                    Service Type <span>*</span>
+                                </label>
+
+                                <select class="form-control" id="service-select" required>
+
+                                    <option value="">
+                                        Select service
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- MODE -->
+                            <div class="form-group">
+
+                                <label class="form-label">
+                                    Service Mode <span>*</span>
+                                </label>
+
+                                <select class="form-control" id="mode-select" required>
+
+                                    <option value="">
+                                        Select mode
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- DATE + TIME -->
+                            <div class="form-row">
+
+                                <div class="form-group">
+
+                                    <label class="form-label">
+                                        Preferred Date <span>*</span>
+                                    </label>
+
+                                    <input type="date" class="form-control" id="booking-date" required />
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="form-label">
+                                        Preferred Time <span>*</span>
+                                    </label>
+
+                                    <select class="form-control" id="slot-select" required>
+
+                                        <option value="">
+                                            Select time slot
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- CONCERN -->
+                            <div class="form-group">
+
+                                <label class="form-label">
+                                    Describe Your Concern <span>*</span>
+                                </label>
+
+                                <textarea class="form-control" id="concern-details" required></textarea>
+
+                            </div>
+
+
+                            <!-- FILE -->
+                            <div class="form-group">
+
+                                <label class="form-label">
+                                    Upload Photos / Files
+                                    <span style="color:var(--text-muted);font-weight:400">
+                                        (optional • max 3 files)
+                                    </span>
+                                </label>
+
+                                <label class="upload-zone" for="booking-files">
+
+                                    <input type="file" id="booking-files" multiple
+                                        accept="image/png,image/jpeg,image/jpg,application/pdf" hidden>
+
+                                    <div class="upload-inner">
+
+                                        <div class="upload-icon">
+                                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                                        </div>
+
+                                        <div class="upload-title">
+                                            Upload supporting files
+                                        </div>
+
+                                        <div class="upload-text">
+                                            Drag & drop or click to browse
+                                        </div>
+
+                                        <div class="upload-hint">
+                                            PNG, JPG, PDF • Maximum of 3 files
+                                        </div>
+
+                                    </div>
+
+                                </label>
+
+                                <div id="preview-container"></div>
+
+                            </div><!-- END FORM GROUP -->
+
+
+
+                            <div class="form-footer">
+
+                                <button type="reset" class="btn btn-ghost">
+
+                                    Clear Form
+
+                                </button>
+
+                                <button type="submit" class="btn btn-primary">
+
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                    Submit Request
+
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!--  REQUEST DETAILS                                         -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <section id="request-details" class="section">
+            <div class="container">
+
+                <div class="section-header">
+
+                    <h2 class="section-title">
+                        Your Request Overview
+                    </h2>
+
+                    <p class="section-subtitle">
+                        Here's a summary of your submitted request and its current status.
+                    </p>
+                </div>
+
+                <div class="req-detail-grid">
+
+                    <!-- MAIN -->
+                    <div>
+
+                        <div class="req-card">
+
+                            <div class="req-card-head">
+                                <h4>Request Summary</h4>
+
+                                <span class="status-pill" id="detail-status"></span>
+                            </div>
+
+                            <div class="req-card-body">
+
+                                <div class="req-field">
+                                    <div class="req-field-label">Service Type</div>
+                                    <div class="req-field-val" id="detail-service"></div>
+                                </div>
+
+                                <div class="req-field">
+                                    <div class="req-field-label">Service Mode</div>
+                                    <div class="req-field-val" id="detail-mode"></div>
+                                </div>
+
+                                <div class="req-field">
+                                    <div class="req-field-label">Preferred Schedule</div>
+                                    <div class="req-field-val" id="detail-schedule"></div>
+                                </div>
+
+                                <div class="req-field">
+                                    <div class="req-field-label">Description</div>
+                                    <div class="req-field-val" id="detail-concern"
+                                        style="font-weight:400;color:var(--text-muted);font-size:14px;line-height:1.6;">
+                                    </div>
+                                </div>
+
+                                <div class="req-field">
+                                    <div class="req-field-label">Submitted On</div>
+                                    <div class="req-field-val" id="detail-created"></div>
+                                </div>
+
+                                <div class="req-field">
+                                    <div class="req-field-label">Uploaded Files</div>
+                                    <div id="detail-files"></div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="review-notice" id="detail-notice" style="margin-top:20px;"></div>
+
+                    </div>
+
+                    <!-- SIDEBAR -->
+                    <div style="display:flex;flex-direction:column;gap:20px;">
+
+                        <!-- QUOTATION -->
+                        <div class="req-card">
+                            <div class="req-card-head">
+                                <h4>Quotation</h4>
+                            </div>
+                            <div class="req-card-body">
+                                <div class="placeholder-block" id="quotation-placeholder"></div>
+                            </div>
+                        </div>
+
+                        <!-- ADMIN RESPONSE / NOTES -->
+                        <div class="req-card">
+                            <div class="req-card-head">
+                                <h4>Admin Response</h4>
+                            </div>
+                            <div class="req-card-body">
+                                <div class="placeholder-block" id="response-placeholder"></div>
+                            </div>
+                        </div>
+
+                        <!-- ACTION BUTTONS -->
+                        <div style="display:flex;flex-direction:column;gap:10px;">
+
+                            <!--
+                            ACCEPT QUOTATION — only shown when status = "waiting".
+                            Clicking this confirms the booking (waiting → confirmed).
+                        -->
+                            <button type="button" id="accept-quotation-btn" class="btn btn-success"
+                                style="display:none;width:100%;">
+                                <i class="fa-solid fa-check"></i>
+                                Accept Quotation
+                            </button>
+
+                            <!--
+                            CANCEL REQUEST — hidden when status is completed or cancelled.
+                        -->
+                            <button type="button" id="cancel-request-btn" class="btn btn-danger" style="width:100%;">
+                                <i class="fa-solid fa-ban"></i>
+                                Cancel Request
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!--  MY REQUESTS                                               -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <section id="my-requests" class="section">
+            <div class="container">
+
+                <!-- Header -->
+                <div class="section-header">
+                    <h2 class="section-title">My Requests</h2>
+                    <p class="section-subtitle">
+                        Manage and track all your submitted service requests in one place.
+                    </p>
+                </div>
+
+                <!-- Toolbar -->
+                <!-- Toolbar -->
+                <div class="req-toolbar">
+
+                    <div class="filters">
+
+                        <select class="filter-select" id="status-filter">
+                            <option value="all">All Statuses</option>
+                            <option value="approved">Confirmed</option>
+                            <option value="waiting">Waiting for Acceptance</option>
+                            <option value="pending">Pending Review</option>
+                            <option value="cancelled">Cancelled</option>
+                            <option value="completed">Completed</option>
+                        </select>
+
+                        <select class="filter-select" id="service-filter">
+                            <option value="all">All Services</option>
+                        </select>
+
+                        <select class="filter-select" id="sort-filter">
+                            <option value="newest">Sort: Newest First</option>
+                            <option value="oldest">Sort: Oldest First</option>
+                        </select>
+
+                    </div>
+
+                    <a href="#request-service" class="btn btn-primary">
+                        <i class="fa-solid fa-plus"></i> New Request
+                    </a>
+
+                </div>
+
+                <!-- Table Card -->
+                <div class="req-card-table">
+
+                    <table class="req-table">
+
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Mode</th>
+                                <th>Date Requested</th>
+                                <th>Schedule</th>
+                                <th>Status</th>
+                                <th style="text-align:right;">Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="requests-table-body">
+
+                            <tr>
+                                <td colspan="6" class="empty-row">
+                                    Loading requests...
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════════════
+     MESSAGE SECTION  — customer.html
+     Replace your entire existing #messages section with this
+══════════════════════════════════════════════════════════════ -->
+        <section id="messages" class="section section-alt">
+            <div class="container">
+
+                <div class="msg-header">
+                    <h2 class="section-title">Chat with Admin</h2>
+                    <p class="section-subtitle">
+                        Send a message directly to the professional handling your request.
+                    </p>
+                </div>
+
+                <!-- Shown only when NOT logged in -->
+                <div id="msg-guest-notice" style="display:none;
+         text-align:center;padding:48px 24px;
+         background:var(--white);border:1.5px solid var(--border);
+         border-radius:var(--radius-lg);box-shadow:var(--shadow);">
+                    <i class="fa-solid fa-lock" style="font-size:32px;color:var(--border);margin-bottom:14px;"></i>
+                    <div style="font-size:15px;font-weight:700;margin-bottom:6px;">Log in to chat</div>
+                    <p style="font-size:13px;color:var(--text-muted);">
+                        You need an account to message the admin.
+                    </p>
+                </div>
+
+                <!-- Main chat window (shown when logged in) -->
+                <div class="msg-window" id="msg-window-wrap">
+
+                    <!-- Top bar -->
+                    <div class="msg-topbar">
+                        <div class="msg-topbar-info">
+                            <div class="msg-admin-av">A</div>
+                            <div>
+                                <div class="msg-admin-name">EMPOWERED Support</div>
+                                <div class="msg-admin-sub">
+                                Professional Support
+                                </div>
+                            </div>
+                        </div>
+                        <span class="msg-private-note">
+                            <i class="fa-solid fa-lock"></i> Private conversation
+                        </span>
+                    </div>
+
+                    <!-- Feed — populated entirely by customer-chat.js -->
+                    <div class="msg-feed" id="customer-msg-feed">
+
+                        <!-- Empty state shown before first message loads -->
+                        <div id="customer-chat-empty" style="
+            display:flex;flex-direction:column;align-items:center;
+            justify-content:center;flex:1;padding:48px 24px;
+            color:var(--text-light);text-align:center;">
+                            <i class="fa-solid fa-comments"
+                                style="font-size:32px;color:var(--border);margin-bottom:12px;"></i>
+                            <div style="font-size:13px;font-weight:600;">No messages yet</div>
+                            <div style="font-size:12px;margin-top:4px;">
+                                Send a message below to start the conversation!
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Lightbox (one per page is fine) -->
+                    <div id="img-lightbox">
+                        <img id="img-lightbox-src" src="" alt="Preview">
+                    </div>
+
+                    <!-- Input -->
+                   <!-- Input -->
+                    <div class="msg-input-area">
+
+                        <div class="msg-input-note">
+                            <i class="fa-solid fa-circle-info"></i>
+                            Only you and the admin can see this conversation.
+                        </div>
+
+                        <!-- File preview -->
+                        <div id="customer-attach-preview"></div>
+
+                        <div class="msg-input-row">
+
+                            <textarea
+                                class="msg-textarea"
+                                id="customer-msg-textarea"
+                                rows="1"
+                                placeholder="Type your message…"></textarea>
+
+                            <label class="msg-attach-btn" for="customer-msg-file" title="Attach a file">
+                                <i class="fa-solid fa-paperclip"></i>
+                            </label>
+
+                            <input
+                                type="file"
+                                id="customer-msg-file"
+                                multiple
+                                accept="image/*,.pdf,.doc,.docx,.txt"
+                                style="display:none;">
+
+                            <button class="btn btn-primary msg-send-btn" id="customer-send-btn">
+                                <i class="fa-solid fa-paper-plane"></i> Send
+                            </button>
+
+                        </div>
+                    </div>
+
+                </div><!-- /msg-window -->
+
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!--  FOOTER                                                    -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <footer>
+            <div class="container">
+                <div class="footer-grid">
+                    <div>
+                        <div class="footer-logo">
+                            <div class="logo-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                            EMPOWERED
+                        </div>
+                        <p class="footer-desc">
+                            A professional freelance services platform offering computer system maintenance and academic
+                            consultation from a licensed electrical engineer. Reliable, expert, and always client-first.
+                        </p>
+                        <div style="display:flex;gap:10px;margin-top:20px;">
+                            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s;"
+                                onmouseover="this.style.background='rgba(255,255,255,.2)'"
+                                onmouseout="this.style.background='rgba(255,255,255,.1)'">
+                                <i class="fa-brands fa-facebook-f" style="color:#fff;font-size:13px;"></i>
+                            </div>
+                            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s;"
+                                onmouseover="this.style.background='rgba(255,255,255,.2)'"
+                                onmouseout="this.style.background='rgba(255,255,255,.1)'">
+                                <i class="fa-brands fa-linkedin-in" style="color:#fff;font-size:13px;"></i>
+                            </div>
+                            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s;"
+                                onmouseover="this.style.background='rgba(255,255,255,.2)'"
+                                onmouseout="this.style.background='rgba(255,255,255,.1)'">
+                                <i class="fa-brands fa-instagram" style="color:#fff;font-size:13px;"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="footer-col">
+                        <h5>Navigation</h5>
+                        <a href="#home">Home</a>
+                        <a href="#about">About</a>
+                        <a href="#services">Services</a>
+                        <a href="#request-service">Request a Service</a>
+                        <a href="#my-requests">My Requests</a>
+                        <a href="admin-auth.html">Admin</a>
+                    </div>
+
+                    <div class="footer-col">
+                        <h5>Contact</h5>
+                        <p><i class="fa-solid fa-envelope" style="width:16px;"></i> &nbsp;contact@empowered.ph</p>
+                        <p><i class="fa-solid fa-phone" style="width:16px;"></i> &nbsp;+63 900 000 0000</p>
+                        <p><i class="fa-solid fa-location-dot" style="width:16px;"></i> &nbsp;Dasmariñas City,
+                            Philippines</p>
+                        <p style="margin-top:14px;font-size:12px;color:rgba(255,255,255,.4);">
+                            Response time: within 24 hours
+                        </p>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <span>© 2025 <strong style="color:#fff;">EMPOWERED</strong>. All rights reserved.</span>
+
+                </div>
+            </div>
+        </footer>
+
+        <!-- LOGOUT MODAL -->
+        <div id="logout-modal" class="modal-overlay">
+            <div class="modal-box">
+                <h3>Confirm Logout</h3>
+                <p>Are you sure you want to log out?</p>
+
+                <div class="modal-actions">
+                    <button id="cancel-logout" class="btn btn-ghost">Cancel</button>
+                    <button id="confirm-logout" class="btn btn-danger">Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!--  IMAGE VIEWER MODAL                                      -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <div id="image-viewer" class="image-viewer">
+
+            <!-- CLOSE -->
+            <button type="button" class="viewer-close" id="viewer-close">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- PREV -->
+            <button type="button" class="viewer-nav prev" id="viewer-prev">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <!-- IMAGE -->
+            <img id="viewer-image" class="viewer-image" src="" alt="Preview">
+
+            <!-- NEXT -->
+            <button type="button" class="viewer-nav next" id="viewer-next">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+        </div>
+
+        <script src="script/customer-chat.js"></script>
+        <script src="script/services.js"></script>
+        <script src="script/session_check.js"></script>
+        <script src="script/service-details.js"></script>
+        <script src="script/booking.js"></script>
+        <script src="script/my_requests.js"></script>
+</main>
+</body>
+</html>

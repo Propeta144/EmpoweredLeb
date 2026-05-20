@@ -1,0 +1,519 @@
+CREATE DATABASE ProfessionalServicesDB;
+USE ProfessionalServicesDB;
+
+-- =========================
+-- TABLES
+-- =========================
+
+CREATE TABLE roles (
+    role_id INT AUTO_INCREMENT PRIMARY KEY,
+    role_name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    role_id INT NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    phone VARCHAR(20),
+    password_hash VARCHAR(255) NOT NULL,
+    profile_image VARCHAR(255),
+    address TEXT,
+    reset_token VARCHAR(255),
+    reset_token_expiry DATETIME,
+    account_status ENUM('active','inactive','suspended') DEFAULT 'active',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_users_roles
+        FOREIGN KEY (role_id)
+        REFERENCES roles(role_id)
+);
+
+CREATE TABLE service_categories (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    category_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE services (
+    service_id INT AUTO_INCREMENT PRIMARY KEY,
+    service_name VARCHAR(150) NOT NULL,
+    description TEXT,
+    price DECIMAL(10,2),
+    duration_minutes INT,
+    availability_status ENUM('available','unavailable') DEFAULT 'available',
+    icon_class VARCHAR(100),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    category_id INT,
+
+    CONSTRAINT fk_services_category
+        FOREIGN KEY (category_id)
+        REFERENCES service_categories(category_id)
+);
+
+CREATE TABLE clients (
+    client_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    preferred_contact_method ENUM('email','phone','sms') DEFAULT 'email',
+    notes TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_clients_users
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE bookings (
+    booking_id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id INT NOT NULL,
+    service_id INT NOT NULL,
+    booking_date DATE NOT NULL,
+    location_type VARCHAR(20),
+    concern_details TEXT,
+    status ENUM ('pending','waiting','approved', 'awaiting_payment', 'completed','confirmed','cancelled','rescheduled') DEFAULT 'pending',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_bookings_clients
+        FOREIGN KEY (client_id)
+        REFERENCES clients(client_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_bookings_services
+        FOREIGN KEY (service_id)
+        REFERENCES services(service_id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE booking_history (
+    history_id INT AUTO_INCREMENT PRIMARY KEY,
+    booking_id INT NOT NULL,
+    changed_by INT NOT NULL,
+    old_status VARCHAR(50),
+    new_status VARCHAR(50),
+    remarks TEXT,
+    changed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_booking_history_bookings
+        FOREIGN KEY (booking_id)
+        REFERENCES bookings(booking_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_booking_history_users
+        FOREIGN KEY (changed_by)
+        REFERENCES users(user_id)
+);
+
+INSERT INTO roles (role_name)
+VALUES
+('admin'),
+('staff'),
+('client');
+
+INSERT INTO service_categories (category_name)
+VALUES
+('Computer Systems Maintenance'),
+('Academic Consultation and Tutoring');
+
+INSERT INTO services (service_name, category_id)
+VALUES
+('Mobile Phone', 1),
+('Desktop', 1),
+('Tablets', 1),
+('Laptops', 1),
+('Notebooks', 1),
+('Academic Writing', 2),
+('Research Studies', 2),
+('Computer Programming', 2);
+
+ALTER TABLE services 
+ADD COLUMN price_range VARCHAR(50),
+ADD COLUMN duration_text VARCHAR(50),
+ADD COLUMN service_modes VARCHAR(100);
+
+UPDATE services SET 
+description = 'Professional diagnosis, repair, optimization, and software support for Android and iOS devices.',
+price_range = '₱500 - ₱5000',
+duration_text = '1-4 Business Days',
+service_modes = 'Walk In,Home Service'
+WHERE service_name = 'Mobile Phone';
+
+UPDATE services SET 
+description = 'Desktop repair, upgrades, virus removal, and performance tuning.',
+price_range = '₱800 - ₱7000',
+duration_text = '1-3 Business Days',
+service_modes = 'Walk In'
+WHERE service_name = 'Desktop';
+
+UPDATE services SET 
+description = 'Tablet troubleshooting, screen repair, and software fixes.',
+price_range = '₱600 - ₱4000',
+duration_text = '1-3 Business Days',
+service_modes = 'Walk In,Home Service'
+WHERE service_name = 'Tablets';
+
+UPDATE services SET 
+description = 'Laptop repair, hardware upgrades, and OS troubleshooting.',
+price_range = '₱1000 - ₱8000',
+duration_text = '1-5 Business Days',
+service_modes = 'Walk In,Home Service'
+WHERE service_name = 'Laptops';
+
+UPDATE services SET 
+description = 'Notebook maintenance and software optimization.',
+price_range = '₱700 - ₱5000',
+duration_text = '1-4 Business Days',
+service_modes = 'Walk In'
+WHERE service_name = 'Notebooks';
+
+UPDATE services SET 
+description = 'Academic writing assistance including essays and reports.',
+price_range = '₱300 - ₱2000',
+duration_text = '1-2 Days',
+service_modes = 'Online'
+WHERE service_name = 'Academic Writing';
+
+UPDATE services SET 
+description = 'Research consultation and thesis assistance.',
+price_range = '₱500 - ₱3000',
+duration_text = '2-5 Days',
+service_modes = 'Online'
+WHERE service_name = 'Research Studies';
+
+UPDATE services SET 
+description = 'Programming tutoring and debugging support.',
+price_range = '₱400 - ₱2500',
+duration_text = '1-3 Days',
+service_modes = 'Online'
+WHERE service_name = 'Computer Programming';
+
+UPDATE services SET icon_class = 'phone.png' WHERE service_name LIKE '%Mobile%';
+UPDATE services SET icon_class = 'desktop.png' WHERE service_name LIKE '%Desktop%';
+UPDATE services SET icon_class = 'tablet.png' WHERE service_name LIKE '%Tablet%';
+UPDATE services SET icon_class = 'laptop.png' WHERE service_name LIKE '%Laptop%';
+UPDATE services SET icon_class = 'notebook.png' WHERE service_name LIKE '%Notebook%';
+UPDATE services SET icon_class = 'writing.png' WHERE service_name LIKE '%Writing%';
+UPDATE services SET icon_class = 'reasearch.png' WHERE service_name LIKE '%Research%';
+UPDATE services SET icon_class = 'cprog.png' WHERE service_name LIKE '%Programming%';
+
+CREATE TABLE IF NOT EXISTS service_items (
+    item_id INT AUTO_INCREMENT PRIMARY KEY,
+    service_id INT NOT NULL,
+    title VARCHAR(150),
+    description TEXT,
+    FOREIGN KEY (service_id) REFERENCES services(service_id) ON DELETE CASCADE
+);
+
+-- MOBILE PHONE (1)
+INSERT INTO service_items (service_id, title, description) VALUES
+(1, 'Software Troubleshooting & Repair', 'OS updates, boot loop fixes, app crashes, factory reset'),
+(1, 'Hardware Diagnostics & Fixes', 'Screen repair, camera repair, water damage assessment'),
+(1, 'Battery Services', 'Battery replacement, charging port repair, power issues'),
+(1, 'Data Optimization', 'Malware removal, backup & transfer, passcode recovery');
+
+-- DESKTOP (2)
+INSERT INTO service_items (service_id, title, description) VALUES
+(2, 'Hardware Repair & Upgrades', 'RAM, HDD/SSD, motherboard troubleshooting'),
+(2, 'Software Installation', 'Operating system installation and drivers setup'),
+(2, 'Virus & Malware Removal', 'Deep cleaning and system protection'),
+(2, 'Performance Optimization', 'Speed boost, startup optimization');
+
+-- TABLETS (3)
+INSERT INTO service_items (service_id, title, description) VALUES
+(3, 'Screen & Touch Repair', 'Fix cracked screens and touch issues'),
+(3, 'System Troubleshooting', 'Fix lag, crashes, and OS errors'),
+(3, 'Battery Replacement', 'Battery and charging fixes'),
+(3, 'App & Storage Optimization', 'App fixes and storage cleanup');
+
+-- LAPTOPS (4)
+INSERT INTO service_items (service_id, title, description) VALUES
+(4, 'Hardware Repair', 'Keyboard, screen, motherboard repair'),
+(4, 'Software Troubleshooting', 'OS reinstall, system errors fix'),
+(4, 'Upgrade Services', 'SSD, RAM upgrades'),
+(4, 'Cooling & Cleaning', 'Fan cleaning and overheating fixes');
+
+-- NOTEBOOKS (5)
+INSERT INTO service_items (service_id, title, description) VALUES
+(5, 'Basic Repairs', 'Minor hardware fixes'),
+(5, 'Software Setup', 'Install apps and OS'),
+(5, 'Performance Optimization', 'Speed improvements'),
+(5, 'System Cleanup', 'Remove junk files and malware');
+
+-- ACADEMIC WRITING (6)
+INSERT INTO service_items (service_id, title, description) VALUES
+(6, 'Essay Writing Assistance', 'Help with essays and formatting'),
+(6, 'Proofreading & Editing', 'Grammar and clarity improvements'),
+(6, 'Formatting Services', 'APA, MLA, IEEE formatting'),
+(6, 'Content Improvement', 'Enhance arguments and structure');
+
+-- RESEARCH STUDIES (7)
+INSERT INTO service_items (service_id, title, description) VALUES
+(7, 'Thesis Consultation', 'Guidance for research projects'),
+(7, 'Data Analysis Support', 'Help with interpreting data'),
+(7, 'Research Writing', 'Chapters and documentation'),
+(7, 'Methodology Assistance', 'Design and structure help');
+
+-- COMPUTER PROGRAMMING (8)
+INSERT INTO service_items (service_id, title, description) VALUES
+(8, 'Debugging Support', 'Fix code errors and bugs'),
+(8, 'Project Assistance', 'Help with programming projects'),
+(8, 'Concept Tutoring', 'Explain programming concepts'),
+(8, 'Code Optimization', 'Improve performance and logic');
+
+ALTER TABLE service_categories
+ADD COLUMN description TEXT,
+ADD COLUMN icon_class VARCHAR(100);
+
+UPDATE services SET icon_class='fa-solid fa-mobile-screen-button'
+WHERE service_name='Mobile Phone';
+
+UPDATE services SET icon_class='fa-solid fa-computer'
+WHERE service_name='Desktop';
+
+UPDATE services SET icon_class='fa-solid fa-tablet-screen-button'
+WHERE service_name='Tablets';
+
+UPDATE services SET icon_class='fa-solid fa-laptop'
+WHERE service_name='Laptops';
+
+UPDATE services SET icon_class='fa-solid fa-book'
+WHERE service_name='Notebooks';
+
+UPDATE services SET icon_class='fa-solid fa-pen-nib'
+WHERE service_name='Academic Writing';
+
+UPDATE services SET icon_class='fa-solid fa-microscope'
+WHERE service_name='Research Studies';
+
+UPDATE services SET icon_class='fa-solid fa-code'
+WHERE service_name='Computer Programming';
+
+UPDATE service_categories
+SET
+description='Diagnostics, repair, and software support',
+icon_class='fa-solid fa-desktop'
+WHERE category_name='Computer Systems Maintenance';
+
+UPDATE service_categories
+SET
+description='Engineering subjects and technical mentoring',
+icon_class='fa-solid fa-book-open-reader'
+WHERE category_name='Academic Consultation and Tutoring';
+
+CREATE TABLE service_schedules (
+    schedule_id INT AUTO_INCREMENT PRIMARY KEY,
+    service_id INT NOT NULL,
+    day_label VARCHAR(100),
+    time_label VARCHAR(100),
+
+    FOREIGN KEY (service_id)
+    REFERENCES services(service_id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE service_modes (
+    mode_id INT AUTO_INCREMENT PRIMARY KEY,
+    service_id INT NOT NULL,
+    mode_name VARCHAR(100),
+    icon_class VARCHAR(100),
+
+    FOREIGN KEY(service_id)
+    REFERENCES services(service_id)
+    ON DELETE CASCADE
+);
+
+-- =========================
+-- SERVICE SCHEDULES
+-- =========================
+
+INSERT INTO service_schedules(service_id, day_label, time_label)
+VALUES
+-- MOBILE PHONE
+(1, 'Monday - Saturday', '9:00 AM - 6:00 PM'),
+
+-- DESKTOP
+(2, 'Monday - Friday', '8:00 AM - 5:00 PM'),
+
+-- TABLETS
+(3, 'Monday - Saturday', '10:00 AM - 6:00 PM'),
+
+-- LAPTOPS
+(4, 'Monday - Saturday', '9:00 AM - 7:00 PM'),
+
+-- NOTEBOOKS
+(5, 'Monday - Friday', '8:00 AM - 4:00 PM'),
+
+-- ACADEMIC WRITING
+(6, 'Weekdays', '5:00 PM - 9:00 PM'),
+
+-- RESEARCH STUDIES
+(7, 'Weekdays', '6:00 PM - 9:00 PM'),
+
+-- COMPUTER PROGRAMMING
+(8, 'Weekdays & Saturday', '4:00 PM - 10:00 PM');
+
+
+
+-- =========================
+-- SERVICE MODES
+-- =========================
+
+INSERT INTO service_modes(service_id, mode_name, icon_class)
+VALUES
+
+-- MOBILE PHONE
+(1, 'Walk In', 'fa-solid fa-shop'),
+(1, 'Home Service', 'fa-solid fa-house'),
+
+-- DESKTOP
+(2, 'Walk In', 'fa-solid fa-shop'),
+
+-- TABLETS
+(3, 'Walk In', 'fa-solid fa-shop'),
+(3, 'Home Service', 'fa-solid fa-house'),
+
+-- LAPTOPS
+(4, 'Walk In', 'fa-solid fa-shop'),
+(4, 'Home Service', 'fa-solid fa-house'),
+
+-- NOTEBOOKS
+(5, 'Walk In', 'fa-solid fa-shop'),
+
+-- ACADEMIC WRITING
+(6, 'Online', 'fa-solid fa-video'),
+
+-- RESEARCH STUDIES
+(7, 'Online', 'fa-solid fa-video'),
+
+-- COMPUTER PROGRAMMING
+(8, 'Online', 'fa-solid fa-video'),
+(8, 'Home Service', 'fa-solid fa-house');
+
+ALTER TABLE service_categories
+ADD COLUMN icon_class VARCHAR(100),
+ADD COLUMN short_description TEXT,
+ADD COLUMN detail_title VARCHAR(255),
+ADD COLUMN detail_description TEXT;
+
+UPDATE service_categories
+SET
+icon_class = 'fa-solid fa-desktop',
+
+short_description =
+'Diagnostics, repair, and software support',
+
+detail_title =
+'Full-Spectrum PC & Hardware Support',
+
+detail_description =
+'Get your computer running at peak performance. From simple software installs to complex hardware replacements, professional diagnostics and repair services are available for desktops and laptops. Walk-in or home service available.'
+
+WHERE category_id = 1;
+
+UPDATE service_categories
+SET
+icon_class = 'fa-solid fa-book-open-reader',
+
+short_description =
+'Engineering subjects & technical mentoring',
+
+detail_title =
+'Engineering Tutoring & Technical Mentoring',
+
+detail_description =
+'Personalized and practical academic support for engineering students including tutoring, technical mentoring, board exam preparation, and capstone guidance.'
+
+WHERE category_id = 2;
+
+CREATE TABLE category_features (
+    feature_id INT AUTO_INCREMENT PRIMARY KEY,
+    category_id INT NOT NULL,
+    feature_text VARCHAR(255) NOT NULL,
+
+    FOREIGN KEY(category_id)
+    REFERENCES service_categories(category_id)
+    ON DELETE CASCADE
+);
+
+INSERT INTO category_features(category_id, feature_text)
+VALUES
+(1, 'Hardware Diagnostics & Repair'),
+(1, 'Virus & Malware Removal'),
+(1, 'System Optimization'),
+(1, 'Data Backup & Recovery'),
+(1, 'Home & Walk-In Support');
+
+INSERT INTO category_features(category_id, feature_text)
+VALUES
+(2, 'Technical Mentoring'),
+(2, 'Programming Assistance'),
+(2, 'Research Consultation'),
+(2, 'Engineering Tutorials'),
+(2, 'Capstone Guidance');
+
+CREATE TABLE booking_files (
+    file_id INT AUTO_INCREMENT PRIMARY KEY,
+    booking_id INT NOT NULL,
+    file_name VARCHAR(255),
+    uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (booking_id)
+    REFERENCES bookings(booking_id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE service_time_slots (
+    slot_id INT AUTO_INCREMENT PRIMARY KEY,
+    slot_label VARCHAR(100) NOT NULL,
+    is_active TINYINT(1) DEFAULT 1
+);
+
+INSERT INTO service_time_slots(slot_label)
+VALUES
+('9:00 AM - 11:00 AM'),
+('11:00 AM - 1:00 PM'),
+('1:00 PM - 3:00 PM'),
+('3:00 PM - 5:00 PM'),
+('5:00 PM - 7:00 PM'),
+('7:00 PM - 9:00 PM');
+
+ALTER TABLE bookings
+ADD COLUMN slot_id INT,
+ADD CONSTRAINT fk_booking_slot
+FOREIGN KEY(slot_id)
+REFERENCES service_time_slots(slot_id);
+
+CREATE TABLE booking_quotations (
+    quotation_id INT AUTO_INCREMENT PRIMARY KEY,
+
+    booking_id INT NOT NULL,
+
+    quotation_amount DECIMAL(10,2),
+
+    admin_notes TEXT,
+
+    quotation_status ENUM(
+        'sent',
+        'accepted',
+        'rejected',
+        'cancelled'
+    ) DEFAULT 'sent',
+
+    created_by INT NOT NULL,
+
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (booking_id)
+    REFERENCES bookings(booking_id)
+    ON DELETE CASCADE,
+
+    FOREIGN KEY (created_by)
+    REFERENCES users(user_id)
+);
+
